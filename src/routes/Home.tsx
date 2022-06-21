@@ -13,7 +13,6 @@ function Home() {
   return (
     <div>
       <h1>blank home</h1>
-
       <div>{loginUser?.nickname}</div>
       <a href="http://localhost:8900/oauth2/authorization/google">
         google login
