@@ -11,11 +11,13 @@ import {
   QuestionBlankContainer,
   WelcomeUserContainer,
 } from "../components/Containers";
-import { LoginBtn, SearchBtn } from "../components/Buttons";
+import { LoginBtn, QuestionBtn } from "../components/Buttons";
 import { QuestionBlank } from "../components/StyledItems";
 import { BACKEND_SERVER_URL } from "../Constants";
 import { Link } from "react-router-dom";
 import { ILoginUser } from "../Interfaces/UserInterfaces";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 
 function Home() {
   const { isLoading: isLoginUserLoading, data: loginUser } =
@@ -64,8 +66,9 @@ function Home() {
           <QuestionBlankContainer>
             <QuestionBlank>
               <input type="text" />
-              <div></div>
-              <SearchBtn></SearchBtn>
+              <QuestionBtn>
+                <FontAwesomeIcon icon={faQuestion} />
+              </QuestionBtn>
             </QuestionBlank>
           </QuestionBlankContainer>
         </Section>

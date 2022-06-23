@@ -20,8 +20,9 @@ export const QuestionBlank = styled.div`
     margin-left: 15px;
     border: none;
     font-size: 1.5rem;
-    &:cursor {
-      border: none;
+    &:focus {
+      outline: 0px;
     }
+    
   }
 `;

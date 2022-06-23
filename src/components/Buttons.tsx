@@ -16,7 +16,11 @@ export const LoginBtn = styled.div`
   color: gray;
 `;
 
-export const SearchBtn = styled.div`
+export const QuestionBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 55px;
   height: 55px;
+  font-size: 1.5rem;
 `;
