@@ -1,7 +1,9 @@
-const BLANK_SERVER_URL = "http://localhost:8900/api/v1";
+import { BACKEND_SERVER_URL } from "../Constants";
+
+const USER_API_URL = `${BACKEND_SERVER_URL}/api/v1/user`;
 
 export async function fetchLoginUser() {
-  const response = await fetch(`${BLANK_SERVER_URL}/user`, {
+  const response = await fetch(`${USER_API_URL}`, {
     credentials: "include",
   });
   if (response.status === 200) {
@@ -12,7 +14,7 @@ export async function fetchLoginUser() {
 }
 
 export async function fetchUserProfile(userId?: string) {
-  const response = await fetch(`${BLANK_SERVER_URL}/user/${userId}`);
+  const response = await fetch(`${USER_API_URL}/${userId}`);
   if (response.status === 200) {
     return await response.json();
   } else {

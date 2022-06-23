@@ -1,5 +1,6 @@
 import { useQuery } from "react-query";
 import { fetchLoginUser } from "../apis/userApis";
+import { getCategories } from "../apis/questionApis";
 import {
   BackGround,
   Header,
@@ -13,15 +14,22 @@ import {
 } from "../components/Containers";
 import { LoginBtn, QuestionBtn } from "../components/Buttons";
 import { QuestionBlank } from "../components/StyledItems";
-import { BACKEND_SERVER_URL } from "../Constants";
 import { Link } from "react-router-dom";
 import { ILoginUser } from "../Interfaces/UserInterfaces";
+import { IQuestionCategory } from "../Interfaces/QuestionInterfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
 
 function Home() {
-  const { isLoading: isLoginUserLoading, data: loginUser } =
-    useQuery<ILoginUser>(["loginUser"], fetchLoginUser);
+  const { data: loginUser } = useQuery<ILoginUser>(
+    ["loginUser"],
+    fetchLoginUser
+  );
+  const { data: categories } = useQuery<IQuestionCategory[]>(
+    ["questionCategory"],
+    getCategories
+  );
+  const onClickQuestionBtn = () => {};
   return (
     <BackGround>
       <MainContainer>
@@ -66,12 +74,15 @@ function Home() {
           <QuestionBlankContainer>
             <QuestionBlank>
               <input type="text" />
-              <QuestionBtn>
+              <QuestionBtn onClick={onClickQuestionBtn}>
                 <FontAwesomeIcon icon={faQuestion} />
               </QuestionBtn>
             </QuestionBlank>
           </QuestionBlankContainer>
         </Section>
+        {categories?.map((category) => {
+          return <div>{category.korValue}</div>;
+        })}
         <Footer>© 2022 Team DDOBAB</Footer>
       </MainContainer>
     </BackGround>
