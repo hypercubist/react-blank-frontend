@@ -13,4 +13,15 @@ export const QuestionBlank = styled.div`
   background-origin: border-box;
   background-clip: content-box, border-box;
   margin: 50px 0 200px 0;
+
+  input {
+    width: 100%;
+    height: 80%;
+    margin-left: 15px;
+    border: none;
+    font-size: 1.5rem;
+    &:cursor {
+      border: none;
+    }
+  }
 `;

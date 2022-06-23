@@ -1,14 +1,21 @@
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./routes/Home";
+import Login from "./routes/Login";
+import Profile from "./routes/Profile";
+import QuestionDetail from "./routes/QuestionDetail";
+import Questions from "./routes/Questions";
 
 function Router() {
   return (
     <BrowserRouter>
-      <Switch>
-        <Route path="/">
-          <Home />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/user/:userId" element={<Profile />}/>
+        <Route path="/questions/*" element={<Questions />}>
+          <Route path=":questionId" element={<QuestionDetail />} />
         </Route>
-      </Switch>
+      </Routes>
     </BrowserRouter>
   );
 }

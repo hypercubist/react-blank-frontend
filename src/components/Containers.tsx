@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export const BackGround = styled.div`
   width: 100%;
-  height: 100vh;
   background-color: wheat;
   display: flex;
   justify-content: center;
@@ -22,7 +21,7 @@ export const MainContainer = styled.div`
 export const Header = styled.header`
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 4fr 1fr;
+  grid-template-columns: 1fr 2fr 1fr;
 `;
 
 export const Section = styled.section`
@@ -54,4 +53,10 @@ export const QuestionBlankContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const WelcomeUserContainer = styled.div`
+  padding: 10px;
+  font-weight: 600;
+  color: gray;
 `;

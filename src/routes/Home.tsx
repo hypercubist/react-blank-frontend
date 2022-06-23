@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchLoginUser } from "../apis/loginApi";
+import { fetchLoginUser } from "../apis/userApis";
 import {
   BackGround,
   Header,
@@ -9,16 +9,14 @@ import {
   LogoContainer,
   LoginBtnContainer,
   QuestionBlankContainer,
+  WelcomeUserContainer,
 } from "../components/Containers";
 import { LoginBtn, SearchBtn } from "../components/Buttons";
 import { QuestionBlank } from "../components/StyledItems";
+import { BACKEND_SERVER_URL } from "../Constants";
+import { Link } from "react-router-dom";
+import { ILoginUser } from "../Interfaces/UserInterfaces";
 
-interface ILoginUser {
-  userNo?: number;
-  nickname?: string;
-  email?: string;
-  profileImgUrl?: string;
-}
 function Home() {
   const { isLoading: isLoginUserLoading, data: loginUser } =
     useQuery<ILoginUser>(["loginUser"], fetchLoginUser);
@@ -29,27 +27,49 @@ function Home() {
           <div></div>
           <div></div>
           <LoginBtnContainer>
-            <LoginBtn>
-              <a href="http://localhost:8900/oauth2/authorization/google">
-                로그인
-              </a>
-            </LoginBtn>
+            {loginUser ? (
+              <WelcomeUserContainer>
+                <Link
+                  to={{
+                    pathname: `/user/${loginUser.userNo}`,
+                  }}
+                >
+                  <div>반가워요!</div>
+                  <div>{`${loginUser.nickname} 님`}</div>
+                </Link>
+              </WelcomeUserContainer>
+            ) : (
+              <LoginBtn>
+                <Link
+                  to={{
+                    pathname: "/login",
+                  }}
+                >
+                  로그인
+                </Link>
+              </LoginBtn>
+            )}
           </LoginBtnContainer>
         </Header>
         <Section>
           <LogoContainer>
-            <img src="/blank_logo_temp.png" alt="logo" />
+            <Link
+              to={{
+                pathname: "/",
+              }}
+            >
+              <img src="/images/blank_logo_temp.png" alt="logo" />
+            </Link>
           </LogoContainer>
           <QuestionBlankContainer>
             <QuestionBlank>
-              <div></div>
+              <input type="text" />
               <div></div>
               <SearchBtn></SearchBtn>
             </QuestionBlank>
           </QuestionBlankContainer>
         </Section>
         <Footer>© 2022 Team DDOBAB</Footer>
-        <div>{loginUser?.nickname}</div>
       </MainContainer>
     </BackGround>
   );
