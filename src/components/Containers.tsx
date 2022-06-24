@@ -55,6 +55,8 @@ export const QuestionBlankContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 100px;
+  border-radius: 30px;
+  box-shadow: 0 3px 5px 3px whitesmoke;
 `;
 
 export const CategorySelectorContainer = styled.div`

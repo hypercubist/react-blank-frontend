@@ -59,3 +59,10 @@ export const ProfileQnATitle = styled.div`
 export const ProfileQnA = styled.div`
   font-size: 0.8rem;
 `;
+
+export const ProfileInfoInput = styled.input`
+  border: none;
+  &:focus {
+    outline: 0px;
+  }
+`;

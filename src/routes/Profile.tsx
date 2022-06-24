@@ -22,6 +22,7 @@ import {
 import {
   ProfileImage,
   ProfileInfo,
+  ProfileInfoInput,
   ProfileQnA,
   ProfileQnATitle,
 } from "../components/StyledItems";
@@ -29,9 +30,12 @@ import { ILoginUser } from "../Interfaces/UserInterfaces";
 import { IQuestion } from "../Interfaces/QuestionInterfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from "react";
+import { JsxElement } from "typescript";
 
 function Profile() {
   const { userNo } = useParams<string>();
+  const { readOnly, setReadOnly } = useState(true);
   const { isLoading: isLoginUserLoading, data: loginUser } =
     useQuery<ILoginUser>(["loginUser"], fetchLoginUser);
   const { isLoading: isProfileLoading, data: profile } = useQuery<ILoginUser>(
@@ -44,7 +48,9 @@ function Profile() {
   const { isLoading: isAnswerTop3Loading, data: answerTop3 } = useQuery<
     IQuestion[]
   >(["profileAnswerTop3", userNo], () => getAnswerTop3(userNo));
-
+  const clickEditBtn = (event: React.MouseEvent<SVGSVGElement>) => {
+    const { currentTarget } = event;
+  };
   return (
     <BackGround>
       <MainContainer>
@@ -69,14 +75,17 @@ function Profile() {
             <ProfileInfoContainer>
               <ProfileInfo>
                 <div>닉네임</div>
-                <div>{profile?.nickname}</div>
+                <ProfileInfoInput
+                  value={profile?.nickname}
+                  readOnly={readOnly}
+                />
               </ProfileInfo>
               <ProfileInfo>
                 <div>이메일</div>
-                <div>{profile?.email}</div>
+                <ProfileInfoInput value={profile?.email} readOnly={readOnly} />
               </ProfileInfo>
               <ProfileInfo>
-                <FontAwesomeIcon icon={faPenToSquare} />
+                <FontAwesomeIcon icon={faPenToSquare} onClick={clickEditBtn} />
               </ProfileInfo>
             </ProfileInfoContainer>
           </ProfileContainer>
