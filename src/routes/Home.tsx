@@ -11,14 +11,16 @@ import {
   LoginBtnContainer,
   QuestionBlankContainer,
   WelcomeUserContainer,
+  CategorySelectorContainer,
 } from "../components/Containers";
 import { LoginBtn, QuestionBtn } from "../components/Buttons";
-import { QuestionBlank } from "../components/StyledItems";
+import { CategorySelector, QuestionBlank } from "../components/StyledItems";
 import { Link } from "react-router-dom";
 import { ILoginUser } from "../Interfaces/UserInterfaces";
-import { IQuestionCategory } from "../Interfaces/QuestionInterfaces";
+import { IQuestionCategory, IQuestionSaveRequest } from "../Interfaces/QuestionInterfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
 
 function Home() {
   const { data: loginUser } = useQuery<ILoginUser>(
@@ -29,7 +31,15 @@ function Home() {
     ["questionCategory"],
     getCategories
   );
-  const onClickQuestionBtn = () => {};
+  let questionSaveRequest:IQuestionSaveRequest;
+  const onClickQuestionBtn = () => {
+  };
+  const onClickCategoryBtn = (event: React.MouseEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { id },
+    } = event;
+    questionSaveRequest.categoryValue=id;
+  };
   return (
     <BackGround>
       <MainContainer>
@@ -79,10 +89,22 @@ function Home() {
               </QuestionBtn>
             </QuestionBlank>
           </QuestionBlankContainer>
+          <CategorySelectorContainer>
+            {categories?.map((category) => {
+              return (
+                <CategorySelector
+                  key={category.engValue}
+                  onClick={onClickCategoryBtn}
+                  value={category.korValue}
+                  id={category.engValue}
+                  width={category.korValue?.length||0}
+                  readOnly
+                ></CategorySelector>
+              );
+            })}
+          </CategorySelectorContainer>
         </Section>
-        {categories?.map((category) => {
-          return <div>{category.korValue}</div>;
-        })}
+
         <Footer>© 2022 Team DDOBAB</Footer>
       </MainContainer>
     </BackGround>
