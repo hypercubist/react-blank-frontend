@@ -12,15 +12,16 @@ export const QuestionBlank = styled.div`
     linear-gradient(to right, #9796f0, #fbc7d4);
   background-origin: border-box;
   background-clip: content-box, border-box;
-  input {
-    width: 100%;
-    height: 80%;
-    margin-left: 15px;
-    border: none;
-    font-size: 1.5rem;
-    &:focus {
-      outline: 0px;
-    }
+`;
+
+export const QuestionBlankInput = styled.input`
+  width: 100%;
+  height: 80%;
+  margin-left: 15px;
+  border: none;
+  font-size: 1.5rem;
+  &:focus {
+    outline: 0px;
   }
 `;
 
@@ -33,7 +34,6 @@ export const CategorySelector = styled.input<{ width: number | 0 }>`
   color: gray;
   padding: 5px;
   margin: 3px 8px 0 0;
-
   &:focus {
     outline: 0px;
     border: 3px solid lightgray;

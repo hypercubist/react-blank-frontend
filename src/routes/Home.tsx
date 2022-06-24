@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { fetchLoginUser } from "../apis/userApis";
-import { getCategories } from "../apis/questionApis";
+import { getCategories, saveQuestion } from "../apis/questionApis";
 import {
   BackGround,
   Header,
@@ -14,13 +14,20 @@ import {
   CategorySelectorContainer,
 } from "../components/Containers";
 import { LoginBtn, QuestionBtn } from "../components/Buttons";
-import { CategorySelector, QuestionBlank } from "../components/StyledItems";
+import {
+  CategorySelector,
+  QuestionBlank,
+  QuestionBlankInput,
+} from "../components/StyledItems";
 import { Link } from "react-router-dom";
 import { ILoginUser } from "../Interfaces/UserInterfaces";
-import { IQuestionCategory, IQuestionSaveRequest } from "../Interfaces/QuestionInterfaces";
+import {
+  IQuestionCategory,
+  IQuestionSaveRequest,
+} from "../Interfaces/QuestionInterfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
+import React, { useState } from "react";
 
 function Home() {
   const { data: loginUser } = useQuery<ILoginUser>(
@@ -31,14 +38,28 @@ function Home() {
     ["questionCategory"],
     getCategories
   );
-  let questionSaveRequest:IQuestionSaveRequest;
-  const onClickQuestionBtn = () => {
+  const [questionSave, setQuestionSave] = useState<IQuestionSaveRequest>({
+    content: "",
+    categoryValue: "NONE",
+  });
+  const clickQuestionBtn = async () => {
+    const result = await saveQuestion(questionSave);
+    console.log(result);
   };
-  const onClickCategoryBtn = (event: React.MouseEvent<HTMLInputElement>) => {
+  const clickCategoryBtn = (event: React.MouseEvent<HTMLInputElement>) => {
     const {
       currentTarget: { id },
     } = event;
-    questionSaveRequest.categoryValue=id;
+    setQuestionSave((prev) => ({ content: prev.content, categoryValue: id }));
+  };
+  const changeBlankInput = (event: React.FormEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = event;
+    setQuestionSave((prev) => ({
+      content: value,
+      categoryValue: prev.categoryValue,
+    }));
   };
   return (
     <BackGround>
@@ -83,8 +104,8 @@ function Home() {
           </LogoContainer>
           <QuestionBlankContainer>
             <QuestionBlank>
-              <input type="text" />
-              <QuestionBtn onClick={onClickQuestionBtn}>
+              <QuestionBlankInput onChange={changeBlankInput} />
+              <QuestionBtn onClick={clickQuestionBtn}>
                 <FontAwesomeIcon icon={faQuestion} />
               </QuestionBtn>
             </QuestionBlank>
@@ -94,10 +115,10 @@ function Home() {
               return (
                 <CategorySelector
                   key={category.engValue}
-                  onClick={onClickCategoryBtn}
+                  onClick={clickCategoryBtn}
                   value={category.korValue}
                   id={category.engValue}
-                  width={category.korValue?.length||0}
+                  width={category.korValue?.length || 0}
                   readOnly
                 ></CategorySelector>
               );

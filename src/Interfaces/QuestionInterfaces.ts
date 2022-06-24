@@ -5,5 +5,5 @@ export interface IQuestionCategory {
 
 export interface IQuestionSaveRequest {
   content?: string;
-  categoryValue: string | "NONE";
+  categoryValue?: string;
 }
