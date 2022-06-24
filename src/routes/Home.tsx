@@ -72,7 +72,7 @@ function Home() {
               <WelcomeUserContainer>
                 <Link
                   to={{
-                    pathname: `/user/${loginUser.userNo}`,
+                    pathname: `/user/${loginUser.no}`,
                   }}
                 >
                   <div>반가워요!</div>

@@ -1,5 +1,5 @@
 export interface ILoginUser {
-  userNo?: number;
+  no?: number;
   nickname?: string;
   email?: string;
   profileImgUrl?: string;

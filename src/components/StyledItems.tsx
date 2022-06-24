@@ -39,3 +39,23 @@ export const CategorySelector = styled.input<{ width: number | 0 }>`
     border: 3px solid lightgray;
   }
 `;
+
+export const ProfileImage = styled.img`
+  width: 170px;
+  height: 170px;
+  border-radius: 100px;
+  box-shadow: 0 0 5px 3px lightgray;
+`;
+
+export const ProfileInfo = styled.div`
+  padding: 10px 0;
+`;
+
+export const ProfileQnATitle = styled.div`
+  font-size: 0.9rem;
+  padding-bottom: 10px;
+`;
+
+export const ProfileQnA = styled.div`
+  font-size: 0.8rem;
+`;

@@ -71,3 +71,34 @@ export const WelcomeUserContainer = styled.div`
   font-weight: 600;
   color: gray;
 `;
+
+export const ProfileContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  width: 100%;
+  padding: 30px 30px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px 5px whitesmoke;
+  margin-top: 20px;
+`;
+
+export const ProfileImgContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ProfileInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 30px;
+`;
+
+export const ProfileQnAContainer = styled.div`
+  width: 100%;
+  padding: 30px 30px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px 5px whitesmoke;
+  margin-top: 20px;
+`;

@@ -11,7 +11,7 @@ function Router() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/user/:userId" element={<Profile />}/>
+        <Route path="/user/:userNo" element={<Profile />} />
         <Route path="/questions/*" element={<Questions />}>
           <Route path=":questionId" element={<QuestionDetail />} />
         </Route>

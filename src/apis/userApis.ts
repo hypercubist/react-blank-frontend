@@ -13,8 +13,26 @@ export async function fetchLoginUser() {
   }
 }
 
-export async function fetchUserProfile(userId?: string) {
-  const response = await fetch(`${USER_API_URL}/${userId}`);
+export async function fetchUserProfile(userNo?: string) {
+  const response = await fetch(`${USER_API_URL}/${userNo}`);
+  if (response.status === 200) {
+    return await response.json();
+  } else {
+    return null;
+  }
+}
+
+export async function getQuestionTop3(userNo?: string) {
+  const response = await fetch(`${USER_API_URL}/${userNo}/question/top3`);
+  if (response.status === 200) {
+    return await response.json();
+  } else {
+    return null;
+  }
+}
+
+export async function getAnswerTop3(userNo?: string) {
+  const response = await fetch(`${USER_API_URL}/${userNo}/answer/top3`);
   if (response.status === 200) {
     return await response.json();
   } else {
