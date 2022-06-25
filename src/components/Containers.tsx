@@ -104,3 +104,11 @@ export const ProfileQnAContainer = styled.div`
   box-shadow: 1px 1px 10px 5px whitesmoke;
   margin-top: 20px;
 `;
+
+export const SearchLinkContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: gray;
+  font-size: 0.9rem;
+`;

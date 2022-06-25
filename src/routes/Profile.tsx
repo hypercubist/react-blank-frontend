@@ -6,6 +6,7 @@ import {
   fetchUserProfile,
   getAnswerTop3,
   getQuestionTop3,
+  udpateProfile,
 } from "../apis/userApis";
 import {
   BackGround,
@@ -20,13 +21,14 @@ import {
   ProfileQnAContainer,
 } from "../components/Containers";
 import {
+  Loading,
   ProfileImage,
   ProfileInfo,
   ProfileInfoInput,
   ProfileQnA,
   ProfileQnATitle,
 } from "../components/StyledItems";
-import { ILoginUser } from "../Interfaces/UserInterfaces";
+import { ILoginUser, IUserInfoUpdate } from "../Interfaces/UserInterfaces";
 import { IQuestion } from "../Interfaces/QuestionInterfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
@@ -38,11 +40,13 @@ function Profile() {
   const [readOnly, setReadOnly] = useState(true);
   const [icon, setIcon] = useState(faPenToSquare);
   const [border, setBorder] = useState(false);
-  const { isLoading: isLoginUserLoading, data: loginUser } =
-    useQuery<ILoginUser>(["loginUser"], fetchLoginUser);
-  const { isLoading: isProfileLoading, data: profile } = useQuery<ILoginUser>(
-    ["profile", userNo],
-    () => fetchUserProfile(userNo)
+  const [userInfoUpdate, setUserInfoUpdate] = useState<IUserInfoUpdate>();
+  const { data: loginUser } = useQuery<ILoginUser>(
+    ["loginUser"],
+    fetchLoginUser
+  );
+  const { data: profile } = useQuery<ILoginUser>(["profile", userNo], () =>
+    fetchUserProfile(userNo)
   );
   const { isLoading: isQuestionTop3Loading, data: questionTop3 } = useQuery<
     IQuestion[]
@@ -54,12 +58,22 @@ function Profile() {
     setIcon((prev) => (prev === faPenToSquare ? faFloppyDisk : faPenToSquare));
     setReadOnly((prev) => !prev);
     setBorder((prev) => !prev);
+    if (icon === faFloppyDisk) {
+      if (userInfoUpdate?.nickname === null) {
+        setUserInfoUpdate({
+          nickname: profile?.nickname,
+        });
+      }
+      udpateProfile(userNo, userInfoUpdate);
+    }
   };
-  const changeProfileInput = (event: React.FormEvent<HTMLInputElement>) => {
+  const changeNicknameInput = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
     } = event;
-    console.log(value);
+    setUserInfoUpdate((prev) => ({
+      nickname: value,
+    }));
   };
   return (
     <BackGround>
@@ -88,7 +102,7 @@ function Profile() {
                 <ProfileInfoInput
                   border={border}
                   defaultValue={profile?.nickname}
-                  onChange={changeProfileInput}
+                  onChange={changeNicknameInput}
                   readOnly={readOnly}
                 />
               </ProfileInfo>
@@ -111,15 +125,23 @@ function Profile() {
           </ProfileContainer>
           <ProfileQnAContainer>
             <ProfileQnATitle>{profile?.nickname}님의 최근 질문</ProfileQnATitle>
-            {questionTop3?.map((question) => (
-              <ProfileQnA key={question.no}>{question.content}</ProfileQnA>
-            ))}
+            {isQuestionTop3Loading ? (
+              <Loading>Loading...</Loading>
+            ) : (
+              questionTop3?.map((question) => (
+                <ProfileQnA key={question.no}>{question.content}</ProfileQnA>
+              ))
+            )}
           </ProfileQnAContainer>
           <ProfileQnAContainer>
             <ProfileQnATitle>{profile?.nickname}님의 최근 답변</ProfileQnATitle>
-            {answerTop3?.map((answer) => (
-              <ProfileQnA key={answer.no}>{answer.content}</ProfileQnA>
-            ))}
+            {isAnswerTop3Loading ? (
+              <Loading>Loading...</Loading>
+            ) : (
+              answerTop3?.map((answer) => (
+                <ProfileQnA key={answer.no}>{answer.content}</ProfileQnA>
+              ))
+            )}
           </ProfileQnAContainer>
         </Section>
         <Footer>© 2022 Team DDOBAB</Footer>

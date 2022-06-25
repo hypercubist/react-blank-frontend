@@ -12,6 +12,7 @@ import {
   QuestionBlankContainer,
   WelcomeUserContainer,
   CategorySelectorContainer,
+  SearchLinkContainer,
 } from "../components/Containers";
 import { LoginBtn, QuestionBtn } from "../components/Buttons";
 import {
@@ -26,7 +27,10 @@ import {
   IQuestionSaveRequest,
 } from "../Interfaces/QuestionInterfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQuestion } from "@fortawesome/free-solid-svg-icons";
+import {
+  faQuestion,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 
 function Home() {
@@ -65,7 +69,12 @@ function Home() {
     <BackGround>
       <MainContainer>
         <Header>
-          <div></div>
+          <SearchLinkContainer>
+            <Link to="/questions">
+              <FontAwesomeIcon icon={faMagnifyingGlass} />
+              <span> 먼저 검색해보기</span>
+            </Link>
+          </SearchLinkContainer>
           <div></div>
           <LoginBtnContainer>
             {loginUser ? (
@@ -104,7 +113,10 @@ function Home() {
           </LogoContainer>
           <QuestionBlankContainer>
             <QuestionBlank>
-              <QuestionBlankInput onChange={changeBlankInput} />
+              <QuestionBlankInput
+                onChange={changeBlankInput}
+                placeholder="지금 질문하기"
+              />
               <QuestionBtn onClick={clickQuestionBtn}>
                 <FontAwesomeIcon icon={faQuestion} />
               </QuestionBtn>

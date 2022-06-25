@@ -4,3 +4,7 @@ export interface ILoginUser {
   email?: string;
   profileImgUrl?: string;
 }
+
+export interface IUserInfoUpdate {
+  nickname?: string;
+}
