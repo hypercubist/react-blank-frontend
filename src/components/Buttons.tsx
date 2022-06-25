@@ -25,6 +25,15 @@ export const QuestionBtn = styled.div`
   font-size: 1.5rem;
 `;
 
+export const SeacrhBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  font-size: 1.1rem;
+`;
+
 export const ProfileEditBtn = styled.div`
   display: flex;
   justify-content: flex-end;

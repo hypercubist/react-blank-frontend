@@ -12,9 +12,8 @@ function Router() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/user/:userNo" element={<Profile />} />
-        <Route path="/questions/*" element={<Questions />}>
-          <Route path=":questionId" element={<QuestionDetail />} />
-        </Route>
+        <Route path="/questions" element={<Questions />} />
+        <Route path="/questions/:questionId" element={<QuestionDetail />} />
       </Routes>
     </BrowserRouter>
   );

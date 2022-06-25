@@ -42,25 +42,30 @@ function Home() {
     ["questionCategory"],
     getCategories
   );
-  const [questionSave, setQuestionSave] = useState<IQuestionSaveRequest>({
-    content: "",
-    categoryValue: "NONE",
-  });
+  const [questionSaveRequest, setQuestionSaveRequest] =
+    useState<IQuestionSaveRequest>({
+      content: "",
+      categoryValue: "NONE",
+    });
   const clickQuestionBtn = async () => {
-    const result = await saveQuestion(questionSave);
-    console.log(result);
+    await saveQuestion(questionSaveRequest);
   };
   const clickCategoryBtn = (event: React.MouseEvent<HTMLInputElement>) => {
     const {
       currentTarget: { id },
     } = event;
-    setQuestionSave((prev) => ({ content: prev.content, categoryValue: id }));
+    setQuestionSaveRequest((prev) => ({
+      content: prev.content,
+      categoryValue: id,
+    }));
   };
-  const changeBlankInput = (event: React.FormEvent<HTMLInputElement>) => {
+  const changeQuestionBlankInput = (
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
     const {
       currentTarget: { value },
     } = event;
-    setQuestionSave((prev) => ({
+    setQuestionSaveRequest((prev) => ({
       content: value,
       categoryValue: prev.categoryValue,
     }));
@@ -114,7 +119,7 @@ function Home() {
           <QuestionBlankContainer>
             <QuestionBlank>
               <QuestionBlankInput
-                onChange={changeBlankInput}
+                onChange={changeQuestionBlankInput}
                 placeholder="지금 질문하기"
               />
               <QuestionBtn onClick={clickQuestionBtn}>

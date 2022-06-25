@@ -59,6 +59,16 @@ export const QuestionBlankContainer = styled.div`
   box-shadow: 0 3px 5px 3px whitesmoke;
 `;
 
+export const SearchBlankContainer = styled.div`
+  width: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  border-radius: 20px;
+  box-shadow: 0 3px 5px 3px whitesmoke;
+`;
+
 export const CategorySelectorContainer = styled.div`
   width: 450px;
   display: flex;
@@ -107,8 +117,15 @@ export const ProfileQnAContainer = styled.div`
 
 export const SearchLinkContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   color: gray;
   font-size: 0.9rem;
+`;
+
+export const QuestionListContainer = styled.ul`
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
 `;

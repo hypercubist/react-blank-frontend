@@ -4,10 +4,24 @@ export const QuestionBlank = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 500px;
+  width: 100%;
   height: 60px;
   border: 4px solid transparent;
   border-radius: 30px;
+  background-image: linear-gradient(white, white),
+    linear-gradient(to right, #9796f0, #fbc7d4);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+`;
+
+export const SearchBlank = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  border: 4px solid transparent;
+  border-radius: 20px;
   background-image: linear-gradient(white, white),
     linear-gradient(to right, #9796f0, #fbc7d4);
   background-origin: border-box;
@@ -20,6 +34,17 @@ export const QuestionBlankInput = styled.input`
   margin-left: 15px;
   border: none;
   font-size: 1.5rem;
+  &:focus {
+    outline: 0px;
+  }
+`;
+
+export const SearchBlankInput = styled.input`
+  width: 100%;
+  height: 80%;
+  margin-left: 15px;
+  border: none;
+  font-size: 1.1rem;
   &:focus {
     outline: 0px;
   }
@@ -75,4 +100,49 @@ export const Loading = styled.div`
   justify-content: center;
   align-items: center;
   color: gray;
+`;
+
+export const QuestionList = styled.li`
+  display: grid;
+  grid-template-columns: 7fr 1fr;
+  width: 100%;
+  height: 80px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px 5px whitesmoke;
+  margin-bottom: 10px;
+`;
+
+export const QuestionListInfo = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: gray;
+`;
+
+export const QuestionListContent = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  font-size: 0.8rem;
+`;
+
+export const QuestionListViews = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.8rem;
+  color: gray;
+  padding-left: 15px;
+  div {
+    margin-left: 3px;
+  }
+`;
+
+export const QuestionListCategory = styled.div`
+  height: 30px;
+  border: 3px solid whitesmoke;
+  border-radius: 15px;
+  padding: 5px;
+  margin-right: 10px;
 `;
