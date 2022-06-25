@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { getCategories } from "../apis/questionApis";
+import { getCategories, getIssues } from "../apis/questionApis";
 import { search } from "../apis/searchApis";
 import { fetchLoginUser } from "../apis/userApis";
 import { LoginBtn, SeacrhBtn } from "../components/Buttons";
@@ -40,6 +40,7 @@ function Questions() {
     word: "",
   });
   const [searchResult, setSearchResult] = useState<IQuestion[]>();
+  const [isSearching, setIsSearching] = useState(false);
   const { data: loginUser } = useQuery<ILoginUser>(
     ["loginUser"],
     fetchLoginUser
@@ -48,6 +49,7 @@ function Questions() {
     ["questionCategory"],
     getCategories
   );
+  const { data: issues } = useQuery<IQuestion[]>(["questionIssues"], getIssues);
   const changeSearchBlankInput = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
@@ -65,6 +67,7 @@ function Questions() {
   };
   const clickSearchBtn = async () => {
     const searchResponse = await search(searchRequest);
+    setIsSearching(true);
     setSearchResult(searchResponse);
   };
   return (
@@ -133,7 +136,7 @@ function Questions() {
             })}
           </CategorySelectorContainer>
           <QuestionListContainer>
-            {searchResult?.map((question) => (
+            {(isSearching ? searchResult : issues)?.map((question) => (
               <Link to={`${question.no}`} key={question.no}>
                 <QuestionList>
                   <div>

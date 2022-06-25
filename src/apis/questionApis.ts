@@ -25,3 +25,12 @@ export async function saveQuestion(questionSaveRequest: IQuestionSaveRequest) {
     return null;
   }
 }
+
+export async function getIssues() {
+  const response = await fetch(`${QUESTION_API_URL}/top5`);
+  if (response.status === 200) {
+    return await response.json();
+  } else {
+    return null;
+  }
+}
