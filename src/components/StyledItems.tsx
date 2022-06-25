@@ -60,8 +60,11 @@ export const ProfileQnA = styled.div`
   font-size: 0.8rem;
 `;
 
-export const ProfileInfoInput = styled.input`
-  border: none;
+export const ProfileInfoInput = styled.input<{ border: boolean }>`
+  padding: 3px;
+  margin-top: 5px;
+  border: ${(props) => (props.border ? "1px solid" : "none")};
+  border-radius: 3px;
   &:focus {
     outline: 0px;
   }

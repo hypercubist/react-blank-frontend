@@ -29,13 +29,15 @@ import {
 import { ILoginUser } from "../Interfaces/UserInterfaces";
 import { IQuestion } from "../Interfaces/QuestionInterfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
-import { JsxElement } from "typescript";
+import { ProfileEditBtn } from "../components/Buttons";
 
 function Profile() {
   const { userNo } = useParams<string>();
-  const { readOnly, setReadOnly } = useState(true);
+  const [readOnly, setReadOnly] = useState(true);
+  const [icon, setIcon] = useState(faPenToSquare);
+  const [border, setBorder] = useState(false);
   const { isLoading: isLoginUserLoading, data: loginUser } =
     useQuery<ILoginUser>(["loginUser"], fetchLoginUser);
   const { isLoading: isProfileLoading, data: profile } = useQuery<ILoginUser>(
@@ -49,7 +51,15 @@ function Profile() {
     IQuestion[]
   >(["profileAnswerTop3", userNo], () => getAnswerTop3(userNo));
   const clickEditBtn = (event: React.MouseEvent<SVGSVGElement>) => {
-    const { currentTarget } = event;
+    setIcon((prev) => (prev === faPenToSquare ? faFloppyDisk : faPenToSquare));
+    setReadOnly((prev) => !prev);
+    setBorder((prev) => !prev);
+  };
+  const changeProfileInput = (event: React.FormEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = event;
+    console.log(value);
   };
   return (
     <BackGround>
@@ -76,17 +86,27 @@ function Profile() {
               <ProfileInfo>
                 <div>닉네임</div>
                 <ProfileInfoInput
-                  value={profile?.nickname}
+                  border={border}
+                  defaultValue={profile?.nickname}
+                  onChange={changeProfileInput}
                   readOnly={readOnly}
                 />
               </ProfileInfo>
               <ProfileInfo>
                 <div>이메일</div>
-                <ProfileInfoInput value={profile?.email} readOnly={readOnly} />
+                <ProfileInfoInput
+                  defaultValue={profile?.email}
+                  border={false}
+                  readOnly
+                />
               </ProfileInfo>
-              <ProfileInfo>
-                <FontAwesomeIcon icon={faPenToSquare} onClick={clickEditBtn} />
-              </ProfileInfo>
+              {loginUser ? (
+                loginUser.no === profile?.no ? (
+                  <ProfileEditBtn>
+                    <FontAwesomeIcon icon={icon} onClick={clickEditBtn} />
+                  </ProfileEditBtn>
+                ) : null
+              ) : null}
             </ProfileInfoContainer>
           </ProfileContainer>
           <ProfileQnAContainer>

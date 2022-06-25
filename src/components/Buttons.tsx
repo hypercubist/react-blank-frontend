@@ -24,3 +24,11 @@ export const QuestionBtn = styled.div`
   height: 55px;
   font-size: 1.5rem;
 `;
+
+export const ProfileEditBtn = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 1.3rem;
+  opacity: 0.5;
+`;
