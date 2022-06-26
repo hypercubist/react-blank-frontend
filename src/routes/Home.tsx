@@ -24,7 +24,7 @@ import { Link } from "react-router-dom";
 import { ILoginUser } from "../Interfaces/UserInterfaces";
 import {
   IQuestionCategory,
-  IQuestionSaveRequest,
+  IQuestionSave,
 } from "../Interfaces/QuestionInterfaces";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -42,11 +42,12 @@ function Home() {
     ["questionCategory"],
     getCategories
   );
-  const [questionSaveRequest, setQuestionSaveRequest] =
-    useState<IQuestionSaveRequest>({
+  const [questionSaveRequest, setQuestionSaveRequest] = useState<IQuestionSave>(
+    {
       content: "",
       categoryValue: "NONE",
-    });
+    }
+  );
   const clickQuestionBtn = async () => {
     await saveQuestion(questionSaveRequest);
   };

@@ -1,4 +1,4 @@
-export interface ISearchRequest {
+export interface ISearch {
   categoryValue?: string;
   word?: string;
 }

@@ -43,13 +43,13 @@ export async function getAnswerTop3(userNo?: string) {
 
 export async function udpateProfile(
   userNo?: string,
-  userInfoUpdate?: IUserInfoUpdate
+  userInfoUpdateData?: IUserInfoUpdate
 ) {
   const response = await fetch(`${USER_API_URL}/${userNo}`, {
     method: "put",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userInfoUpdate),
+    body: JSON.stringify(userInfoUpdateData),
   });
   if (response.status === 202) {
     return await response.json();

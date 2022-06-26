@@ -140,9 +140,15 @@ export const QuestionListCategory = styled.div`
   margin-right: 10px;
 `;
 
-export const QuestionDetailContent = styled.div`
-  margin-top: 15px;
+export const QuestionDetailContentInput = styled.input<{ border: boolean }>`
+  margin: 15px 0;
   font-size: 0.9rem;
+  padding: 3px;
+  border: ${(props) => (props.border ? "2px solid lightgray" : "none")};
+  border-radius: 5px;
+  &:focus {
+    outline: 0px;
+  }
 `;
 export const QuestionDetailCategory = styled.div`
   height: 30px;
@@ -151,11 +157,16 @@ export const QuestionDetailCategory = styled.div`
   padding: 5px;
 `;
 export const QuestionDetailWriter = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 30px;
-  padding: 5px;
 `;
 
 export const QuestionDetailViews = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 0.8rem;
   color: gray;
   padding: 5px;

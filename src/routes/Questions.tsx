@@ -31,11 +31,11 @@ import {
   SearchBlankInput,
 } from "../components/StyledItems";
 import { IQuestion, IQuestionCategory } from "../Interfaces/QuestionInterfaces";
-import { ISearchRequest } from "../Interfaces/SearchInterfaces";
+import { ISearch } from "../Interfaces/SearchInterfaces";
 import { ILoginUser } from "../Interfaces/UserInterfaces";
 
 function Questions() {
-  const [searchRequest, setSearchRequest] = useState<ISearchRequest>({
+  const [searchRequestData, setSearchRequestData] = useState<ISearch>({
     categoryValue: "NONE",
     word: "",
   });
@@ -54,7 +54,7 @@ function Questions() {
     const {
       currentTarget: { value },
     } = event;
-    setSearchRequest((prev) => ({
+    setSearchRequestData((prev) => ({
       categoryValue: prev.categoryValue,
       word: value,
     }));
@@ -63,10 +63,10 @@ function Questions() {
     const {
       currentTarget: { id },
     } = event;
-    setSearchRequest((prev) => ({ categoryValue: id, word: prev.word }));
+    setSearchRequestData((prev) => ({ categoryValue: id, word: prev.word }));
   };
   const clickSearchBtn = async () => {
-    const searchResponse = await search(searchRequest);
+    const searchResponse = await search(searchRequestData);
     setIsSearching(true);
     setSearchResult(searchResponse);
   };

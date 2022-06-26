@@ -40,7 +40,8 @@ function Profile() {
   const [readOnly, setReadOnly] = useState(true);
   const [icon, setIcon] = useState(faPenToSquare);
   const [border, setBorder] = useState(false);
-  const [userInfoUpdate, setUserInfoUpdate] = useState<IUserInfoUpdate>();
+  const [userInfoUpdateData, setUserInfoUpdateData] =
+    useState<IUserInfoUpdate>();
   const { data: loginUser } = useQuery<ILoginUser>(
     ["loginUser"],
     fetchLoginUser
@@ -54,24 +55,27 @@ function Profile() {
   const { isLoading: isAnswerTop3Loading, data: answerTop3 } = useQuery<
     IQuestion[]
   >(["profileAnswerTop3", userNo], () => getAnswerTop3(userNo));
-  const clickEditBtn = (event: React.MouseEvent<SVGSVGElement>) => {
+  const clickEditBtn = async () => {
+    setUserInfoUpdateData({ nickname: profile?.nickname });
     setIcon((prev) => (prev === faPenToSquare ? faFloppyDisk : faPenToSquare));
     setReadOnly((prev) => !prev);
     setBorder((prev) => !prev);
     if (icon === faFloppyDisk) {
-      if (userInfoUpdate?.nickname === null) {
-        setUserInfoUpdate({
-          nickname: profile?.nickname,
-        });
+      const success = await udpateProfile(userNo, userInfoUpdateData);
+      if (success) {
+        alert("변경하신 내용이 저장되었습니다.");
+      } else {
+        alert(
+          "오류가 발생하여 변경 내용이 저장되지 않았습니다. 다시 시도해주세요"
+        );
       }
-      udpateProfile(userNo, userInfoUpdate);
     }
   };
   const changeNicknameInput = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
     } = event;
-    setUserInfoUpdate((prev) => ({
+    setUserInfoUpdateData((prev) => ({
       nickname: value,
     }));
   };

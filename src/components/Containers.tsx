@@ -151,13 +151,16 @@ export const QuestionDetailContainer = styled.div`
 export const QuestionDetailInfoContainer = styled.div`
   width: 100%;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   color: gray;
   font-size: 0.9rem;
 `;
 
 export const QuestionDetailButtonsContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
   margin-top: 10px;
 `;
 

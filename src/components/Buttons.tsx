@@ -46,25 +46,38 @@ export const QuestionDetailEditBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60px;
+  width: 50px;
   height: 35px;
   border: 2px solid #9796f0;
   border-radius: 5px;
   padding: 10px;
-  color: darkblue;
+  color: #9796f0;
   font-size: 0.9rem;
 `;
 export const QuestionDetailDeleteBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60px;
+  width: 50px;
   height: 35px;
   border: 2px solid #fbc7d4;
   border-radius: 5px;
   padding: 10px;
   margin-left: 10px;
-  color: red;
+  color: #fbc7d4;
   font-size: 0.9rem;
 `;
-export const QuestionDetailAnswerBtn = styled.div``;
+export const QuestionDetailAnswerBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90px;
+  height: 35px;
+  border: 3px solid transparent;
+  border-radius: 5px;
+  background-image: linear-gradient(white, white),
+    linear-gradient(to right, #9796f0, #fbc7d4);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  font-size: 0.9rem;
+`;

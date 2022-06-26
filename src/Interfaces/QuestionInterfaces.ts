@@ -3,7 +3,7 @@ export interface IQuestionCategory {
   engValue?: string;
 }
 
-export interface IQuestionSaveRequest {
+export interface IQuestionSave {
   content?: string;
   categoryValue?: string;
 }
@@ -13,5 +13,11 @@ export interface IQuestion {
   categoryValue?: string;
   content?: string;
   writer?: string;
+  writerNo?: number;
   views?: number;
+}
+
+export interface IQuestionUpdate {
+  content?: string;
+  categoryValue?: string;
 }
