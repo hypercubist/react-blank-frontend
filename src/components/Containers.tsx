@@ -29,6 +29,7 @@ export const Section = styled.section`
   flex-direction: column;
   align-items: center;
   width: 100%;
+  padding: 0 20px;
 `;
 
 export const Footer = styled.footer`
@@ -124,8 +125,48 @@ export const SearchLinkContainer = styled.div`
 `;
 
 export const QuestionListContainer = styled.ul`
-  width: 600px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   margin-top: 20px;
+`;
+
+export const QuestionListInfoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: gray;
+`;
+
+export const QuestionDetailContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px 5px whitesmoke;
+`;
+
+export const QuestionDetailInfoContainer = styled.div`
+  width: 100%;
+  display: flex;
+  color: gray;
+  font-size: 0.9rem;
+`;
+
+export const QuestionDetailButtonsContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+`;
+
+export const AnswerListContainer = styled.ul`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px 5px whitesmoke;
 `;

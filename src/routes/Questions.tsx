@@ -19,13 +19,13 @@ import {
   SearchBlankContainer,
   CategorySelectorContainer,
   QuestionListContainer,
+  QuestionListInfoContainer,
 } from "../components/Containers";
 import {
   CategorySelector,
   QuestionList,
   QuestionListCategory,
   QuestionListContent,
-  QuestionListInfo,
   QuestionListViews,
   SearchBlank,
   SearchBlankInput,
@@ -140,12 +140,12 @@ function Questions() {
               <Link to={`${question.no}`} key={question.no}>
                 <QuestionList>
                   <div>
-                    <QuestionListInfo>
+                    <QuestionListInfoContainer>
                       <QuestionListCategory>
                         {question.categoryValue}
                       </QuestionListCategory>
                       <div>{question.writer}</div>
-                    </QuestionListInfo>
+                    </QuestionListInfoContainer>
                     <QuestionListContent>
                       {(question.content?.length || 0) <= 70
                         ? question.content

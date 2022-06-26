@@ -113,13 +113,6 @@ export const QuestionList = styled.li`
   margin-bottom: 10px;
 `;
 
-export const QuestionListInfo = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 0.8rem;
-  color: gray;
-`;
-
 export const QuestionListContent = styled.div`
   display: flex;
   align-items: center;
@@ -145,4 +138,25 @@ export const QuestionListCategory = styled.div`
   border-radius: 15px;
   padding: 5px;
   margin-right: 10px;
+`;
+
+export const QuestionDetailContent = styled.div`
+  margin-top: 15px;
+  font-size: 0.9rem;
+`;
+export const QuestionDetailCategory = styled.div`
+  height: 30px;
+  border: 3px solid whitesmoke;
+  border-radius: 15px;
+  padding: 5px;
+`;
+export const QuestionDetailWriter = styled.div`
+  height: 30px;
+  padding: 5px;
+`;
+
+export const QuestionDetailViews = styled.div`
+  font-size: 0.8rem;
+  color: gray;
+  padding: 5px;
 `;

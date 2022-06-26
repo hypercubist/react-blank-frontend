@@ -41,3 +41,30 @@ export const ProfileEditBtn = styled.div`
   font-size: 1.3rem;
   opacity: 0.5;
 `;
+
+export const QuestionDetailEditBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 35px;
+  border: 2px solid #9796f0;
+  border-radius: 5px;
+  padding: 10px;
+  color: darkblue;
+  font-size: 0.9rem;
+`;
+export const QuestionDetailDeleteBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 35px;
+  border: 2px solid #fbc7d4;
+  border-radius: 5px;
+  padding: 10px;
+  margin-left: 10px;
+  color: red;
+  font-size: 0.9rem;
+`;
+export const QuestionDetailAnswerBtn = styled.div``;
