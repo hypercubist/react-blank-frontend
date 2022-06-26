@@ -148,6 +148,16 @@ export const QuestionDetailContainer = styled.div`
   box-shadow: 1px 1px 10px 5px whitesmoke;
 `;
 
+export const AnswerContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px 5px whitesmoke;
+`;
+
 export const QuestionDetailInfoContainer = styled.div`
   width: 100%;
   display: flex;
@@ -155,6 +165,15 @@ export const QuestionDetailInfoContainer = styled.div`
   align-items: center;
   color: gray;
   font-size: 0.9rem;
+`;
+
+export const AnswerInfoContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: gray;
+  font-size: 0.8rem;
 `;
 
 export const QuestionDetailButtonsContainer = styled.div`

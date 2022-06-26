@@ -150,6 +150,19 @@ export const QuestionDetailContentInput = styled.input<{ border: boolean }>`
     outline: 0px;
   }
 `;
+
+export const AnswerContentInput = styled.input`
+  height: 40px;
+  font-size: 0.9rem;
+  padding: 3px;
+  margin-bottom: 10px;
+  border: 2px solid lightgray;
+  border-radius: 5px;
+  &:focus {
+    outline: 0px;
+  }
+`;
+
 export const QuestionDetailCategory = styled.div`
   height: 30px;
   border: 3px solid whitesmoke;
@@ -157,6 +170,13 @@ export const QuestionDetailCategory = styled.div`
   padding: 5px;
 `;
 export const QuestionDetailWriter = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+`;
+
+export const AnswerWriter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

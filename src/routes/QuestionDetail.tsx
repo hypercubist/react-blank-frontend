@@ -21,6 +21,8 @@ import {
   QuestionDetailEditBtn,
 } from "../components/Buttons";
 import {
+  AnswerContainer,
+  AnswerInfoContainer,
   BackGround,
   CategorySelectorContainer,
   Footer,
@@ -35,6 +37,8 @@ import {
   WelcomeUserContainer,
 } from "../components/Containers";
 import {
+  AnswerContentInput,
+  AnswerWriter,
   CategorySelector,
   QuestionDetailCategory,
   QuestionDetailContentInput,
@@ -50,11 +54,12 @@ import { ILoginUser } from "../Interfaces/UserInterfaces";
 
 function QuestionDetail() {
   const [editIcon, setEditIcon] = useState(faPen);
-  const [border, setBorder] = useState(false);
-  const [readOnly, setReadOnly] = useState(true);
+  const [questionInputBorder, setQuestionInputBorder] = useState(false);
+  const [questionInputReadOnly, setQuestionInputReadOnly] = useState(true);
   const [questionUpdateData, setQuestionUpdateData] =
     useState<IQuestionUpdate>();
   const [showCategories, setShowCategories] = useState(false);
+  const [showAnswerForm, setShowAnswerForm] = useState(false);
   const { questionNo } = useParams<string>();
   const { data: loginUser } = useQuery<ILoginUser>(
     ["loginUser"],
@@ -91,8 +96,8 @@ function QuestionDetail() {
       content: questionDetail?.content,
     });
     setEditIcon((prev) => (prev === faPen ? faFloppyDisk : faPen));
-    setBorder((prev) => !prev);
-    setReadOnly((prev) => !prev);
+    setQuestionInputBorder((prev) => !prev);
+    setQuestionInputReadOnly((prev) => !prev);
     setShowCategories((prev) => !prev);
     if (editIcon === faFloppyDisk) {
       const success = await updateQuestionDetail(
@@ -107,6 +112,9 @@ function QuestionDetail() {
         );
       }
     }
+  };
+  const clickAnswerBtn = () => {
+    alert("답변하기 버튼 눌림");
   };
   const changeQuestionDetailContentInput = (
     event: React.FormEvent<HTMLInputElement>
@@ -183,10 +191,10 @@ function QuestionDetail() {
               </CategorySelectorContainer>
             ) : null}
             <QuestionDetailContentInput
-              border={border}
+              border={questionInputBorder}
               defaultValue={questionDetail?.content}
               onChange={changeQuestionDetailContentInput}
-              readOnly={readOnly}
+              readOnly={questionInputReadOnly}
             />
 
             <QuestionDetailInfoContainer>
@@ -196,7 +204,7 @@ function QuestionDetail() {
                 </QuestionDetailWriter>
               </Link>
               {loginUser ? (
-                loginUser.no === questionDetail?.writerNo ? (
+                loginUser.no !== questionDetail?.writerNo ? (
                   <QuestionDetailButtonsContainer>
                     <QuestionDetailEditBtn onClick={clickQuestionEditBtn}>
                       <FontAwesomeIcon icon={editIcon} />
@@ -207,12 +215,23 @@ function QuestionDetail() {
                   </QuestionDetailButtonsContainer>
                 ) : (
                   <QuestionDetailButtonsContainer>
-                    <QuestionDetailAnswerBtn>답변하기</QuestionDetailAnswerBtn>
+                    <QuestionDetailAnswerBtn onClick={clickAnswerBtn}>
+                      답변하기
+                    </QuestionDetailAnswerBtn>
                   </QuestionDetailButtonsContainer>
                 )
               ) : null}
             </QuestionDetailInfoContainer>
           </QuestionDetailContainer>
+          {!showAnswerForm ? (
+            <AnswerContainer>
+              <AnswerContentInput placeholder="답변을 여기 적어주세요." />
+              <AnswerInfoContainer>
+                <AnswerWriter>답변작성자1</AnswerWriter>
+              </AnswerInfoContainer>
+            </AnswerContainer>
+          ) : null}
+          <AnswerContainer></AnswerContainer>
         </Section>
         <Footer>© 2022 Team DDOBAB</Footer>
       </MainContainer>
