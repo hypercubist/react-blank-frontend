@@ -155,12 +155,18 @@ export const AnswerContentInput = styled.input`
   height: 40px;
   font-size: 0.9rem;
   padding: 3px;
-  margin-bottom: 10px;
+  margin: 10px 0;
   border: 2px solid lightgray;
   border-radius: 5px;
   &:focus {
     outline: 0px;
   }
+`;
+
+export const AnswerContent = styled.div`
+  font-size: 0.9rem;
+  padding: 3px;
+  margin: 10px 0;
 `;
 
 export const QuestionDetailCategory = styled.div`
@@ -181,6 +187,7 @@ export const AnswerWriter = styled.div`
   justify-content: center;
   align-items: center;
   height: 30px;
+  font-size: 0.8rem;
 `;
 
 export const QuestionDetailViews = styled.div`

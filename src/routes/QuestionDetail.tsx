@@ -1,5 +1,6 @@
 import {
   faFloppyDisk,
+  faMinus,
   faPen,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -7,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
+import { getAnswersByQuestionNo, saveAnswer } from "../apis/answerApis";
 import {
   deleteQuestionDetail,
   getCategories,
@@ -16,11 +18,12 @@ import {
 import { fetchLoginUser } from "../apis/userApis";
 import {
   LoginBtn,
-  QuestionDetailAnswerBtn,
+  OpenAnswerSaveFormBtn,
   QuestionDetailDeleteBtn,
   QuestionDetailEditBtn,
 } from "../components/Buttons";
 import {
+  AnswerButtonsContainer,
   AnswerContainer,
   AnswerInfoContainer,
   BackGround,
@@ -37,6 +40,7 @@ import {
   WelcomeUserContainer,
 } from "../components/Containers";
 import {
+  AnswerContent,
   AnswerContentInput,
   AnswerWriter,
   CategorySelector,
@@ -45,6 +49,7 @@ import {
   QuestionDetailViews,
   QuestionDetailWriter,
 } from "../components/StyledItems";
+import { IAnswer, IAnswerSlice } from "../Interfaces/AnswerInterfaces";
 import {
   IQuestion,
   IQuestionCategory,
@@ -53,14 +58,26 @@ import {
 import { ILoginUser } from "../Interfaces/UserInterfaces";
 
 function QuestionDetail() {
+  const { questionNo } = useParams<string>();
+  const [paging, setPaging] = useState({ page: 0, size: 3 });
   const [editIcon, setEditIcon] = useState(faPen);
   const [questionInputBorder, setQuestionInputBorder] = useState(false);
   const [questionInputReadOnly, setQuestionInputReadOnly] = useState(true);
   const [questionUpdateData, setQuestionUpdateData] =
     useState<IQuestionUpdate>();
   const [showCategories, setShowCategories] = useState(false);
-  const [showAnswerForm, setShowAnswerForm] = useState(false);
-  const { questionNo } = useParams<string>();
+  const [showAnswerSaveForm, setShowAnswerSaveForm] = useState(false);
+  const [showOpenAnswerSaveFormBtn, setShowOpenAnswerSaveFormBtn] =
+    useState(true);
+  const [showAnswerEditForm, setShowAnswerEditForm] = useState(false);
+  const [answerSaveRequestData, setAnswerSaveRequestData] = useState({
+    questionNo,
+    content: "",
+  });
+  const [answerUpdateRequestData, setAnswerUpdateRequestData] = useState({
+    questionNo,
+    content: "",
+  });
   const { data: loginUser } = useQuery<ILoginUser>(
     ["loginUser"],
     fetchLoginUser
@@ -69,8 +86,14 @@ function QuestionDetail() {
     ["questionCategory"],
     getCategories
   );
-  const { data: questionDetail } = useQuery<IQuestion>(["questionDetail"], () =>
-    getQuestionDetail(questionNo)
+  const { data: questionDetail } = useQuery<IQuestion>(
+    ["questionDetail", questionNo],
+    () => getQuestionDetail(questionNo)
+  );
+
+  const { data: answerSlice } = useQuery<IAnswerSlice>(
+    ["answerSlice", questionNo, paging],
+    () => getAnswersByQuestionNo(paging, questionNo)
   );
   const clickCategoryBtn = (event: React.MouseEvent<HTMLInputElement>) => {
     const {
@@ -113,8 +136,52 @@ function QuestionDetail() {
       }
     }
   };
-  const clickAnswerBtn = () => {
-    alert("답변하기 버튼 눌림");
+  const clickOpenAnswerSaveFormBtn = () => {
+    setShowOpenAnswerSaveFormBtn(false);
+    setShowAnswerSaveForm(true);
+  };
+  const clickAnswerSaveBtn = async () => {
+    if (answerSaveRequestData.content === "") {
+      alert("답변이 작성되지 않았습니다.");
+    } else {
+      const success = await saveAnswer(answerSaveRequestData);
+      if (success) {
+        setShowOpenAnswerSaveFormBtn(true);
+        setShowAnswerSaveForm(false);
+        setAnswerSaveRequestData((prev) => ({
+          questionNo: prev.questionNo,
+          content: "",
+        }));
+        alert("답변이 저장되었습니다.");
+      } else {
+        alert("오류가 발생하여 답변이 저장되지 않았습니다. 다시 시도해주세요.");
+      }
+    }
+  };
+  const clickCloseAnswerSaveFormBtn = () => {
+    setShowOpenAnswerSaveFormBtn(true);
+    setShowAnswerSaveForm(false);
+    setAnswerSaveRequestData((prev) => ({
+      questionNo: prev.questionNo,
+      content: "",
+    }));
+  };
+  const clickCloseAnswerEditFormBtn = () => {
+    setShowAnswerEditForm(false);
+  };
+  const clickOpenAnswerEditFormBtn = (
+    event: React.MouseEvent<HTMLInputElement>
+  ) => {
+    const { currentTarget } = event;
+
+    // setAnswerUpdateRequestData();
+    setShowAnswerEditForm(true);
+    setShowOpenAnswerSaveFormBtn(true);
+    setShowAnswerSaveForm(false);
+    setAnswerSaveRequestData((prev) => ({
+      questionNo: prev.questionNo,
+      content: "",
+    }));
   };
   const changeQuestionDetailContentInput = (
     event: React.FormEvent<HTMLInputElement>
@@ -125,6 +192,15 @@ function QuestionDetail() {
     setQuestionUpdateData((prev) => ({
       content: value,
       categoryValue: prev?.categoryValue,
+    }));
+  };
+  const changeAnswerSaveInput = (event: React.FormEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = event;
+    setAnswerSaveRequestData((prev) => ({
+      questionNo: prev.questionNo,
+      content: value,
     }));
   };
   return (
@@ -215,23 +291,63 @@ function QuestionDetail() {
                   </QuestionDetailButtonsContainer>
                 ) : (
                   <QuestionDetailButtonsContainer>
-                    <QuestionDetailAnswerBtn onClick={clickAnswerBtn}>
-                      답변하기
-                    </QuestionDetailAnswerBtn>
+                    {showOpenAnswerSaveFormBtn ? (
+                      <OpenAnswerSaveFormBtn
+                        onClick={clickOpenAnswerSaveFormBtn}
+                      >
+                        답변하기
+                      </OpenAnswerSaveFormBtn>
+                    ) : null}
                   </QuestionDetailButtonsContainer>
                 )
               ) : null}
             </QuestionDetailInfoContainer>
           </QuestionDetailContainer>
-          {!showAnswerForm ? (
+
+          {showAnswerSaveForm ? (
             <AnswerContainer>
-              <AnswerContentInput placeholder="답변을 여기 적어주세요." />
+              <AnswerInfoContainer onClick={clickCloseAnswerSaveFormBtn}>
+                <FontAwesomeIcon icon={faMinus} />
+              </AnswerInfoContainer>
+              <AnswerContentInput
+                placeholder="답변을 여기 적어주세요."
+                onChange={changeAnswerSaveInput}
+              />
               <AnswerInfoContainer>
-                <AnswerWriter>답변작성자1</AnswerWriter>
+                <AnswerWriter>{loginUser?.nickname}</AnswerWriter>
+                <AnswerButtonsContainer onClick={clickAnswerSaveBtn}>
+                  <FontAwesomeIcon icon={faFloppyDisk} />
+                </AnswerButtonsContainer>
               </AnswerInfoContainer>
             </AnswerContainer>
           ) : null}
-          <AnswerContainer></AnswerContainer>
+          {showAnswerEditForm ? (
+            <AnswerContainer>
+              <AnswerInfoContainer onClick={clickCloseAnswerEditFormBtn}>
+                <FontAwesomeIcon icon={faMinus} />
+              </AnswerInfoContainer>
+              <AnswerContentInput placeholder="변경하실 답변을 여기 적어주세요." />
+              <AnswerInfoContainer>
+                <AnswerWriter>{loginUser?.nickname}</AnswerWriter>
+                <AnswerButtonsContainer onClick={clickAnswerSaveBtn}>
+                  <FontAwesomeIcon icon={faFloppyDisk} />
+                </AnswerButtonsContainer>
+              </AnswerInfoContainer>
+            </AnswerContainer>
+          ) : null}
+          {answerSlice?.answers?.map((answer) => {
+            return (
+              <AnswerContainer key={answer?.no}>
+                <AnswerContent>{answer?.content}</AnswerContent>
+                <AnswerInfoContainer>
+                  <AnswerWriter>{answer?.writer}</AnswerWriter>
+                  <AnswerButtonsContainer onClick={clickOpenAnswerEditFormBtn}>
+                    <FontAwesomeIcon icon={faPen} />
+                  </AnswerButtonsContainer>
+                </AnswerInfoContainer>
+              </AnswerContainer>
+            );
+          })}
         </Section>
         <Footer>© 2022 Team DDOBAB</Footer>
       </MainContainer>

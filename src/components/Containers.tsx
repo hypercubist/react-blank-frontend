@@ -172,8 +172,7 @@ export const AnswerInfoContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: gray;
-  font-size: 0.8rem;
+  padding: 0 10px;
 `;
 
 export const QuestionDetailButtonsContainer = styled.div`
@@ -191,4 +190,8 @@ export const AnswerListContainer = styled.ul`
   padding: 20px;
   border-radius: 10px;
   box-shadow: 1px 1px 10px 5px whitesmoke;
+`;
+
+export const AnswerButtonsContainer = styled.div`
+  font-size: 1.2rem;
 `;

@@ -67,7 +67,7 @@ export const QuestionDetailDeleteBtn = styled.div`
   color: #fbc7d4;
   font-size: 0.9rem;
 `;
-export const QuestionDetailAnswerBtn = styled.div`
+export const OpenAnswerSaveFormBtn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
