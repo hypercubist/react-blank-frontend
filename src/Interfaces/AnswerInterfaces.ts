@@ -12,3 +12,8 @@ export interface IAnswerSave {
   questionNo?: string;
   content?: string;
 }
+
+export interface IAnswerUpdate {
+  questionNo?: string;
+  content?: string;
+}

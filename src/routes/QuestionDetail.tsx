@@ -8,7 +8,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
-import { getAnswersByQuestionNo, saveAnswer } from "../apis/answerApis";
+import {
+  getAnswersByQuestionNo,
+  saveAnswer,
+  updateAnswer,
+} from "../apis/answerApis";
 import {
   deleteQuestionDetail,
   getCategories,
@@ -49,7 +53,11 @@ import {
   QuestionDetailViews,
   QuestionDetailWriter,
 } from "../components/StyledItems";
-import { IAnswer, IAnswerSlice } from "../Interfaces/AnswerInterfaces";
+import {
+  IAnswer,
+  IAnswerSlice,
+  IAnswerUpdate,
+} from "../Interfaces/AnswerInterfaces";
 import {
   IQuestion,
   IQuestionCategory,
@@ -59,6 +67,7 @@ import { ILoginUser } from "../Interfaces/UserInterfaces";
 
 function QuestionDetail() {
   const { questionNo } = useParams<string>();
+  const [toUpdateAnswerNo, setToUpdateAnswerNo] = useState<number>();
   const [paging, setPaging] = useState({ page: 0, size: 3 });
   const [editIcon, setEditIcon] = useState(faPen);
   const [questionInputBorder, setQuestionInputBorder] = useState(false);
@@ -74,10 +83,11 @@ function QuestionDetail() {
     questionNo,
     content: "",
   });
-  const [answerUpdateRequestData, setAnswerUpdateRequestData] = useState({
-    questionNo,
-    content: "",
-  });
+  const [answerUpdateRequestData, setAnswerUpdateRequestData] =
+    useState<IAnswerUpdate>({
+      questionNo,
+      content: "",
+    });
   const { data: loginUser } = useQuery<ILoginUser>(
     ["loginUser"],
     fetchLoginUser
@@ -139,6 +149,11 @@ function QuestionDetail() {
   const clickOpenAnswerSaveFormBtn = () => {
     setShowOpenAnswerSaveFormBtn(false);
     setShowAnswerSaveForm(true);
+    setAnswerUpdateRequestData((prev) => ({
+      questionNo: prev?.questionNo,
+      content: "",
+    }));
+    setShowAnswerEditForm(false);
   };
   const clickAnswerSaveBtn = async () => {
     if (answerSaveRequestData.content === "") {
@@ -158,6 +173,27 @@ function QuestionDetail() {
       }
     }
   };
+  const clickAnswerUpdateBtn = async () => {
+    if (answerUpdateRequestData.content === "") {
+      alert("답변이 작성되지 않았습니다.");
+    } else {
+      const success = await updateAnswer(
+        toUpdateAnswerNo,
+        answerUpdateRequestData
+      );
+      if (success) {
+        setShowAnswerEditForm(false);
+        setAnswerUpdateRequestData((prev) => ({
+          questionNo: prev.questionNo,
+          content: "",
+        }));
+        setToUpdateAnswerNo(0);
+        alert("답변이 저장되었습니다.");
+      } else {
+        alert("오류가 발생하여 답변이 저장되지 않았습니다. 다시 시도해주세요.");
+      }
+    }
+  };
   const clickCloseAnswerSaveFormBtn = () => {
     setShowOpenAnswerSaveFormBtn(true);
     setShowAnswerSaveForm(false);
@@ -168,13 +204,18 @@ function QuestionDetail() {
   };
   const clickCloseAnswerEditFormBtn = () => {
     setShowAnswerEditForm(false);
+    setAnswerUpdateRequestData((prev) => ({
+      questionNo: prev.questionNo,
+      content: "",
+    }));
+    setToUpdateAnswerNo(0);
   };
-  const clickOpenAnswerEditFormBtn = (
-    event: React.MouseEvent<HTMLInputElement>
-  ) => {
-    const { currentTarget } = event;
-
-    // setAnswerUpdateRequestData();
+  const clickOpenAnswerEditFormBtn = (answer: IAnswer) => {
+    setAnswerUpdateRequestData((prev) => ({
+      questionNo: prev?.questionNo,
+      content: answer?.content,
+    }));
+    setToUpdateAnswerNo(answer.no);
     setShowAnswerEditForm(true);
     setShowOpenAnswerSaveFormBtn(true);
     setShowAnswerSaveForm(false);
@@ -199,6 +240,15 @@ function QuestionDetail() {
       currentTarget: { value },
     } = event;
     setAnswerSaveRequestData((prev) => ({
+      questionNo: prev.questionNo,
+      content: value,
+    }));
+  };
+  const changeAnswerEditInput = (event: React.FormEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = event;
+    setAnswerUpdateRequestData((prev) => ({
       questionNo: prev.questionNo,
       content: value,
     }));
@@ -326,10 +376,14 @@ function QuestionDetail() {
               <AnswerInfoContainer onClick={clickCloseAnswerEditFormBtn}>
                 <FontAwesomeIcon icon={faMinus} />
               </AnswerInfoContainer>
-              <AnswerContentInput placeholder="변경하실 답변을 여기 적어주세요." />
+              <AnswerContentInput
+                placeholder="변경하실 답변을 여기 적어주세요."
+                value={answerUpdateRequestData.content}
+                onChange={changeAnswerEditInput}
+              />
               <AnswerInfoContainer>
                 <AnswerWriter>{loginUser?.nickname}</AnswerWriter>
-                <AnswerButtonsContainer onClick={clickAnswerSaveBtn}>
+                <AnswerButtonsContainer onClick={clickAnswerUpdateBtn}>
                   <FontAwesomeIcon icon={faFloppyDisk} />
                 </AnswerButtonsContainer>
               </AnswerInfoContainer>
@@ -341,7 +395,9 @@ function QuestionDetail() {
                 <AnswerContent>{answer?.content}</AnswerContent>
                 <AnswerInfoContainer>
                   <AnswerWriter>{answer?.writer}</AnswerWriter>
-                  <AnswerButtonsContainer onClick={clickOpenAnswerEditFormBtn}>
+                  <AnswerButtonsContainer
+                    onClick={() => clickOpenAnswerEditFormBtn(answer)}
+                  >
                     <FontAwesomeIcon icon={faPen} />
                   </AnswerButtonsContainer>
                 </AnswerInfoContainer>
