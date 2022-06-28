@@ -11,7 +11,7 @@ export const MainContainer = styled.div`
   display: grid;
   grid-template-rows: 100px 1fr 30px;
   width: 640px;
-  height: 800px;
+  min-height: 800px;
   padding: 30px 20px;
   margin: 20px;
   border-radius: 10px;
@@ -34,6 +34,7 @@ export const Section = styled.section`
 
 export const Footer = styled.footer`
   width: 100%;
+  margin-top: 20px;
 `;
 
 export const LogoContainer = styled.div`
@@ -193,5 +194,16 @@ export const AnswerListContainer = styled.ul`
 `;
 
 export const AnswerButtonsContainer = styled.div`
-  font-size: 1.2rem;
+  width: 60px;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  opacity: 0.8;
+  font-size: 1.1rem;
+`;
+
+export const LoadMoreContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
 `;

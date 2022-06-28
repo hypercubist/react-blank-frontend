@@ -2,6 +2,8 @@ import {
   faFloppyDisk,
   faMinus,
   faPen,
+  faSortDown,
+  faSortUp,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +11,7 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import {
+  deleteAnswer,
   getAnswersByQuestionNo,
   saveAnswer,
   updateAnswer,
@@ -21,6 +24,8 @@ import {
 } from "../apis/questionApis";
 import { fetchLoginUser } from "../apis/userApis";
 import {
+  LoadAfterBtn,
+  LoadBeforeBtn,
   LoginBtn,
   OpenAnswerSaveFormBtn,
   QuestionDetailDeleteBtn,
@@ -34,6 +39,7 @@ import {
   CategorySelectorContainer,
   Footer,
   Header,
+  LoadMoreContainer,
   LoginBtnContainer,
   LogoContainer,
   MainContainer,
@@ -88,6 +94,8 @@ function QuestionDetail() {
       questionNo,
       content: "",
     });
+  const [showLoadAfterBtn, setShowLoadAfterBtn] = useState(false);
+  const [showLoadBeforeBtn, setShowLoadBeforeBtn] = useState(false);
   const { data: loginUser } = useQuery<ILoginUser>(
     ["loginUser"],
     fetchLoginUser
@@ -101,10 +109,10 @@ function QuestionDetail() {
     () => getQuestionDetail(questionNo)
   );
 
-  const { data: answerSlice } = useQuery<IAnswerSlice>(
-    ["answerSlice", questionNo, paging],
-    () => getAnswersByQuestionNo(paging, questionNo)
-  );
+  const { data: answerSlice, isLoading: isAnswerSliceLoading } =
+    useQuery<IAnswerSlice>(["answerSlice", questionNo, paging], () =>
+      getAnswersByQuestionNo(paging, questionNo)
+    );
   const clickCategoryBtn = (event: React.MouseEvent<HTMLInputElement>) => {
     const {
       currentTarget: { id },
@@ -114,11 +122,15 @@ function QuestionDetail() {
       content: prev?.content,
     }));
   };
-  const clickQuestionDeleteBtn = () => {
+  const clickQuestionDeleteBtn = async () => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      deleteQuestionDetail(questionNo);
-      alert("삭제되었습니다.");
-      window.location.href = "/";
+      const success = await deleteQuestionDetail(questionNo);
+      if (success) {
+        alert("삭제되었습니다.");
+        window.location.href = "/";
+      } else {
+        alert("삭제 중 오류가 발생하였습니다. 다시 시도해주세요.");
+      }
     }
   };
   const clickQuestionEditBtn = async () => {
@@ -194,6 +206,22 @@ function QuestionDetail() {
       }
     }
   };
+  const clickAnswerDeleteBtn = async () => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      const success = await deleteAnswer(toUpdateAnswerNo);
+      if (success) {
+        setShowAnswerEditForm(false);
+        setAnswerUpdateRequestData((prev) => ({
+          questionNo: prev.questionNo,
+          content: "",
+        }));
+        setToUpdateAnswerNo(0);
+        alert("삭제되었습니다.");
+      } else {
+        alert("삭제 중 오류가 발생하였습니다. 다시 시도해주세요.");
+      }
+    }
+  };
   const clickCloseAnswerSaveFormBtn = () => {
     setShowOpenAnswerSaveFormBtn(true);
     setShowAnswerSaveForm(false);
@@ -223,6 +251,12 @@ function QuestionDetail() {
       questionNo: prev.questionNo,
       content: "",
     }));
+  };
+  const clickLoadAfterBtn = () => {
+    setPaging((prev) => ({ page: prev.page + 1, size: prev.size }));
+  };
+  const clickLoadBeforeBtn = () => {
+    setPaging((prev) => ({ page: prev.page - 1, size: prev.size }));
   };
   const changeQuestionDetailContentInput = (
     event: React.FormEvent<HTMLInputElement>
@@ -353,7 +387,6 @@ function QuestionDetail() {
               ) : null}
             </QuestionDetailInfoContainer>
           </QuestionDetailContainer>
-
           {showAnswerSaveForm ? (
             <AnswerContainer>
               <AnswerInfoContainer onClick={clickCloseAnswerSaveFormBtn}>
@@ -383,8 +416,15 @@ function QuestionDetail() {
               />
               <AnswerInfoContainer>
                 <AnswerWriter>{loginUser?.nickname}</AnswerWriter>
-                <AnswerButtonsContainer onClick={clickAnswerUpdateBtn}>
-                  <FontAwesomeIcon icon={faFloppyDisk} />
+                <AnswerButtonsContainer>
+                  <FontAwesomeIcon
+                    icon={faFloppyDisk}
+                    onClick={clickAnswerUpdateBtn}
+                  />
+                  <FontAwesomeIcon
+                    icon={faTrashCan}
+                    onClick={clickAnswerDeleteBtn}
+                  />
                 </AnswerButtonsContainer>
               </AnswerInfoContainer>
             </AnswerContainer>
@@ -404,6 +444,18 @@ function QuestionDetail() {
               </AnswerContainer>
             );
           })}
+          <LoadMoreContainer>
+            {paging.page > 0 ? (
+              <LoadBeforeBtn onClick={clickLoadBeforeBtn}>
+                <FontAwesomeIcon icon={faSortUp} />
+              </LoadBeforeBtn>
+            ) : null}
+            {answerSlice?.hasNext ? (
+              <LoadAfterBtn onClick={clickLoadAfterBtn}>
+                <FontAwesomeIcon icon={faSortDown} />
+              </LoadAfterBtn>
+            ) : null}
+          </LoadMoreContainer>
         </Section>
         <Footer>© 2022 Team DDOBAB</Footer>
       </MainContainer>

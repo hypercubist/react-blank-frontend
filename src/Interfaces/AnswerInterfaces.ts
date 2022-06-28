@@ -6,7 +6,7 @@ export interface IAnswer {
 
 export interface IAnswerSlice {
   answers: IAnswer[];
-  hasnext: boolean;
+  hasNext: boolean;
 }
 export interface IAnswerSave {
   questionNo?: string;

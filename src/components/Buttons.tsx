@@ -81,3 +81,31 @@ export const OpenAnswerSaveFormBtn = styled.div`
   background-clip: content-box, border-box;
   font-size: 0.9rem;
 `;
+
+export const LoadAfterBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 40px;
+  border: 2px solid whitesmoke;
+  border-radius: 20px;
+  box-shadow: 1px 1px 10px 5px whitesmoke;
+  padding-bottom: 10px;
+  font-size: 2rem;
+  opacity: 0.8;
+`;
+
+export const LoadBeforeBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 40px;
+  border: 2px solid whitesmoke;
+  border-radius: 20px;
+  box-shadow: 1px 1px 10px 5px whitesmoke;
+  padding-top: 10px;
+  font-size: 2rem;
+  opacity: 0.8;
+`;

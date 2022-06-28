@@ -52,3 +52,15 @@ export async function updateAnswer(
     return null;
   }
 }
+
+export async function deleteAnswer(answerNo?: number) {
+  const response = await fetch(`${ANSWER_API_URL}/${answerNo}`, {
+    credentials: "include",
+    method: "delete",
+  });
+  if (response.status === 200) {
+    return "ok";
+  } else {
+    return null;
+  }
+}
