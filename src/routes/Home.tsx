@@ -49,7 +49,11 @@ function Home() {
     }
   );
   const clickQuestionBtn = async () => {
-    await saveQuestion(questionSaveRequest);
+    const success = await saveQuestion(questionSaveRequest);
+    if (!success) {
+      alert("질문 중 오류가 발생하였습니다. 다시 시도해주세요.");
+    }
+    window.location.href = `/questions/${success.no}`;
   };
   const clickCategoryBtn = (event: React.MouseEvent<HTMLInputElement>) => {
     const {

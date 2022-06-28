@@ -94,8 +94,6 @@ function QuestionDetail() {
       questionNo,
       content: "",
     });
-  const [showLoadAfterBtn, setShowLoadAfterBtn] = useState(false);
-  const [showLoadBeforeBtn, setShowLoadBeforeBtn] = useState(false);
   const { data: loginUser } = useQuery<ILoginUser>(
     ["loginUser"],
     fetchLoginUser
@@ -109,10 +107,10 @@ function QuestionDetail() {
     () => getQuestionDetail(questionNo)
   );
 
-  const { data: answerSlice, isLoading: isAnswerSliceLoading } =
-    useQuery<IAnswerSlice>(["answerSlice", questionNo, paging], () =>
-      getAnswersByQuestionNo(paging, questionNo)
-    );
+  const { data: answerSlice } = useQuery<IAnswerSlice>(
+    ["answerSlice", questionNo, paging],
+    () => getAnswersByQuestionNo(paging, questionNo)
+  );
   const clickCategoryBtn = (event: React.MouseEvent<HTMLInputElement>) => {
     const {
       currentTarget: { id },
