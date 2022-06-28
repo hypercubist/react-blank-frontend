@@ -133,7 +133,9 @@ function Profile() {
               <Loading>Loading...</Loading>
             ) : (
               questionTop3?.map((question) => (
-                <ProfileQnA key={question.no}>{question.content}</ProfileQnA>
+                <Link to={`/questions/${question.no}`}>
+                  <ProfileQnA key={question.no}>{question.content}</ProfileQnA>
+                </Link>
               ))
             )}
           </ProfileQnAContainer>

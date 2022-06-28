@@ -82,7 +82,11 @@ export const ProfileQnATitle = styled.div`
 `;
 
 export const ProfileQnA = styled.div`
-  font-size: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.9rem;
+  margin: 5px 0;
 `;
 
 export const ProfileInfoInput = styled.input<{ border: boolean }>`
