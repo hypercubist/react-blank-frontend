@@ -1,4 +1,9 @@
-import { faMagnifyingGlass, faEye } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faEye,
+  faSortDown,
+  faSortUp,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { useQuery } from "react-query";
@@ -6,7 +11,12 @@ import { Link } from "react-router-dom";
 import { getCategories, getIssues } from "../apis/questionApis";
 import { search } from "../apis/searchApis";
 import { fetchLoginUser } from "../apis/userApis";
-import { LoginBtn, SeacrhBtn } from "../components/Buttons";
+import {
+  LoadAfterBtn,
+  LoadBeforeBtn,
+  LoginBtn,
+  SeacrhBtn,
+} from "../components/Buttons";
 import {
   BackGround,
   MainContainer,
@@ -20,6 +30,7 @@ import {
   CategorySelectorContainer,
   QuestionListContainer,
   QuestionListInfoContainer,
+  LoadMoreContainer,
 } from "../components/Containers";
 import {
   CategorySelector,
@@ -30,7 +41,12 @@ import {
   SearchBlank,
   SearchBlankInput,
 } from "../components/StyledItems";
-import { IQuestion, IQuestionCategory } from "../Interfaces/QuestionInterfaces";
+import { IResponse } from "../Interfaces/CommonInterfaces";
+import {
+  IQuestion,
+  IQuestionCategory,
+  IQuestionSlice,
+} from "../Interfaces/QuestionInterfaces";
 import { ISearch } from "../Interfaces/SearchInterfaces";
 import { ILoginUser } from "../Interfaces/UserInterfaces";
 
@@ -39,17 +55,21 @@ function Questions() {
     categoryValue: "NONE",
     word: "",
   });
-  const [searchResult, setSearchResult] = useState<IQuestion[]>();
+  const [searchSlice, setSearchSlice] = useState<IResponse<IQuestionSlice>>();
   const [isSearching, setIsSearching] = useState(false);
-  const { data: loginUser } = useQuery<ILoginUser>(
+  const [paging, setPaging] = useState({ page: 0, size: 5 });
+  const { data: loginUser } = useQuery<IResponse<ILoginUser>>(
     ["loginUser"],
     fetchLoginUser
   );
-  const { data: categories } = useQuery<IQuestionCategory[]>(
+  const { data: categories } = useQuery<IResponse<IQuestionCategory[]>>(
     ["questionCategory"],
     getCategories
   );
-  const { data: issues } = useQuery<IQuestion[]>(["questionIssues"], getIssues);
+  const { data: issues } = useQuery<IResponse<IQuestion[]>>(
+    ["questionIssues"],
+    getIssues
+  );
   const changeSearchBlankInput = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
@@ -66,9 +86,20 @@ function Questions() {
     setSearchRequestData((prev) => ({ categoryValue: id, word: prev.word }));
   };
   const clickSearchBtn = async () => {
-    const searchResponse = await search(searchRequestData);
-    setIsSearching(true);
-    setSearchResult(searchResponse);
+    setPaging((prev) => ({ page: 0, size: prev.size }));
+    const success = await search(paging, searchRequestData);
+    if (success) {
+      setIsSearching(true);
+      setSearchSlice(success);
+    } else {
+      alert("검색 중 오류가 발생하였습니다. 다시 시도해주세요.");
+    }
+  };
+  const clickLoadAfterBtn = () => {
+    setPaging((prev) => ({ page: prev.page + 1, size: prev.size }));
+  };
+  const clickLoadBeforeBtn = () => {
+    setPaging((prev) => ({ page: prev.page - 1, size: prev.size }));
   };
   return (
     <BackGround>
@@ -85,15 +116,15 @@ function Questions() {
             </Link>
           </LogoContainer>
           <LoginBtnContainer>
-            {loginUser ? (
+            {loginUser?.data ? (
               <WelcomeUserContainer>
                 <Link
                   to={{
-                    pathname: `/user/${loginUser.no}`,
+                    pathname: `/user/${loginUser.data.no}`,
                   }}
                 >
                   <div>반가워요!</div>
-                  <div>{`${loginUser.nickname} 님`}</div>
+                  <div>{`${loginUser.data.nickname} 님`}</div>
                 </Link>
               </WelcomeUserContainer>
             ) : (
@@ -122,7 +153,7 @@ function Questions() {
             </SearchBlank>
           </SearchBlankContainer>
           <CategorySelectorContainer>
-            {categories?.map((category) => {
+            {categories?.data.map((category) => {
               return (
                 <CategorySelector
                   key={category.engValue}
@@ -136,30 +167,44 @@ function Questions() {
             })}
           </CategorySelectorContainer>
           <QuestionListContainer>
-            {(isSearching ? searchResult : issues)?.map((question) => (
-              <Link to={`${question.no}`} key={question.no}>
-                <QuestionList>
-                  <div>
-                    <QuestionListInfoContainer>
-                      <QuestionListCategory>
-                        {question.categoryValue}
-                      </QuestionListCategory>
-                      <div>{question.writer}</div>
-                    </QuestionListInfoContainer>
-                    <QuestionListContent>
-                      {(question.content?.length || 0) <= 70
-                        ? question.content
-                        : `${question.content?.slice(0, 70)}...`}
-                    </QuestionListContent>
-                  </div>
-                  <QuestionListViews>
-                    <FontAwesomeIcon icon={faEye} />
-                    <div>{question.views}</div>
-                  </QuestionListViews>
-                </QuestionList>
-              </Link>
-            ))}
+            {(isSearching ? searchSlice?.data?.questions : issues?.data)?.map(
+              (question) => (
+                <Link to={`${question.no}`} key={question.no}>
+                  <QuestionList>
+                    <div>
+                      <QuestionListInfoContainer>
+                        <QuestionListCategory>
+                          {question.categoryValue}
+                        </QuestionListCategory>
+                        <div>{question.writer}</div>
+                      </QuestionListInfoContainer>
+                      <QuestionListContent>
+                        {(question.content?.length || 0) <= 70
+                          ? question.content
+                          : `${question.content?.slice(0, 70)}...`}
+                      </QuestionListContent>
+                    </div>
+                    <QuestionListViews>
+                      <FontAwesomeIcon icon={faEye} />
+                      <div>{question.views}</div>
+                    </QuestionListViews>
+                  </QuestionList>
+                </Link>
+              )
+            )}
           </QuestionListContainer>
+          <LoadMoreContainer>
+            {paging.page > 0 ? (
+              <LoadBeforeBtn onClick={clickLoadBeforeBtn}>
+                <FontAwesomeIcon icon={faSortUp} />
+              </LoadBeforeBtn>
+            ) : null}
+            {searchSlice?.data?.hasNext ? (
+              <LoadAfterBtn onClick={clickLoadAfterBtn}>
+                <FontAwesomeIcon icon={faSortDown} />
+              </LoadAfterBtn>
+            ) : null}
+          </LoadMoreContainer>
         </Section>
         <Footer>© 2022 Team DDOBAB</Footer>
       </MainContainer>

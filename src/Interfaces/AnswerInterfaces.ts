@@ -8,6 +8,7 @@ export interface IAnswerSlice {
   answers: IAnswer[];
   hasNext: boolean;
 }
+
 export interface IAnswerSave {
   questionNo?: string;
   content?: string;

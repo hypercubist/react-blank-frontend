@@ -34,6 +34,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 import { ProfileEditBtn } from "../components/Buttons";
+import { IResponse } from "../Interfaces/CommonInterfaces";
+import { IAnswer } from "../Interfaces/AnswerInterfaces";
 
 function Profile() {
   const { userNo } = useParams<string>();
@@ -42,21 +44,22 @@ function Profile() {
   const [border, setBorder] = useState(false);
   const [userInfoUpdateData, setUserInfoUpdateData] =
     useState<IUserInfoUpdate>();
-  const { data: loginUser } = useQuery<ILoginUser>(
+  const { data: loginUser } = useQuery<IResponse<ILoginUser>>(
     ["loginUser"],
     fetchLoginUser
   );
-  const { data: profile } = useQuery<ILoginUser>(["profile", userNo], () =>
-    fetchUserProfile(userNo)
+  const { data: profile } = useQuery<IResponse<ILoginUser>>(
+    ["profile", userNo],
+    () => fetchUserProfile(userNo)
   );
   const { isLoading: isQuestionTop3Loading, data: questionTop3 } = useQuery<
-    IQuestion[]
+    IResponse<IQuestion[]>
   >(["profileQuestionTop3", userNo], () => getQuestionTop3(userNo));
   const { isLoading: isAnswerTop3Loading, data: answerTop3 } = useQuery<
-    IQuestion[]
+    IResponse<IAnswer[]>
   >(["profileAnswerTop3", userNo], () => getAnswerTop3(userNo));
   const clickEditBtn = async () => {
-    setUserInfoUpdateData({ nickname: profile?.nickname });
+    setUserInfoUpdateData({ nickname: profile?.data.nickname });
     setIcon((prev) => (prev === faPenToSquare ? faFloppyDisk : faPenToSquare));
     setReadOnly((prev) => !prev);
     setBorder((prev) => !prev);
@@ -98,14 +101,14 @@ function Profile() {
         <Section>
           <ProfileContainer>
             <ProfileImgContainer>
-              <ProfileImage src={profile?.profileImgUrl} />
+              <ProfileImage src={profile?.data.profileImgUrl} />
             </ProfileImgContainer>
             <ProfileInfoContainer>
               <ProfileInfo>
                 <div>닉네임</div>
                 <ProfileInfoInput
                   border={border}
-                  defaultValue={profile?.nickname}
+                  defaultValue={profile?.data.nickname}
                   onChange={changeNicknameInput}
                   readOnly={readOnly}
                 />
@@ -113,13 +116,13 @@ function Profile() {
               <ProfileInfo>
                 <div>이메일</div>
                 <ProfileInfoInput
-                  defaultValue={profile?.email}
+                  defaultValue={profile?.data.email}
                   border={false}
                   readOnly
                 />
               </ProfileInfo>
               {loginUser ? (
-                loginUser.no === profile?.no ? (
+                loginUser.data.no === profile?.data.no ? (
                   <ProfileEditBtn>
                     <FontAwesomeIcon icon={icon} onClick={clickEditBtn} />
                   </ProfileEditBtn>
@@ -128,11 +131,13 @@ function Profile() {
             </ProfileInfoContainer>
           </ProfileContainer>
           <ProfileQnAContainer>
-            <ProfileQnATitle>{profile?.nickname}님의 최근 질문</ProfileQnATitle>
+            <ProfileQnATitle>
+              {profile?.data.nickname}님의 최근 질문
+            </ProfileQnATitle>
             {isQuestionTop3Loading ? (
               <Loading>Loading...</Loading>
             ) : (
-              questionTop3?.map((question) => (
+              questionTop3?.data.map((question) => (
                 <Link to={`/questions/${question.no}`}>
                   <ProfileQnA key={question.no}>{question.content}</ProfileQnA>
                 </Link>
@@ -140,11 +145,13 @@ function Profile() {
             )}
           </ProfileQnAContainer>
           <ProfileQnAContainer>
-            <ProfileQnATitle>{profile?.nickname}님의 최근 답변</ProfileQnATitle>
+            <ProfileQnATitle>
+              {profile?.data.nickname}님의 최근 답변
+            </ProfileQnATitle>
             {isAnswerTop3Loading ? (
               <Loading>Loading...</Loading>
             ) : (
-              answerTop3?.map((answer) => (
+              answerTop3?.data.map((answer) => (
                 <ProfileQnA key={answer.no}>{answer.content}</ProfileQnA>
               ))
             )}

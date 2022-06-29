@@ -64,6 +64,7 @@ import {
   IAnswerSlice,
   IAnswerUpdate,
 } from "../Interfaces/AnswerInterfaces";
+import { IResponse } from "../Interfaces/CommonInterfaces";
 import {
   IQuestion,
   IQuestionCategory,
@@ -94,20 +95,20 @@ function QuestionDetail() {
       questionNo,
       content: "",
     });
-  const { data: loginUser } = useQuery<ILoginUser>(
+  const { data: loginUser } = useQuery<IResponse<ILoginUser>>(
     ["loginUser"],
     fetchLoginUser
   );
-  const { data: categories } = useQuery<IQuestionCategory[]>(
+  const { data: categories } = useQuery<IResponse<IQuestionCategory[]>>(
     ["questionCategory"],
     getCategories
   );
-  const { data: questionDetail } = useQuery<IQuestion>(
+  const { data: questionDetail } = useQuery<IResponse<IQuestion>>(
     ["questionDetail", questionNo],
     () => getQuestionDetail(questionNo)
   );
 
-  const { data: answerSlice } = useQuery<IAnswerSlice>(
+  const { data: answerSlice } = useQuery<IResponse<IAnswerSlice>>(
     ["answerSlice", questionNo, paging],
     () => getAnswersByQuestionNo(paging, questionNo)
   );
@@ -133,10 +134,10 @@ function QuestionDetail() {
   };
   const clickQuestionEditBtn = async () => {
     setQuestionUpdateData({
-      categoryValue: categories?.filter(
-        (category) => category.korValue === questionDetail?.categoryValue
+      categoryValue: categories?.data?.filter(
+        (category) => category.korValue === questionDetail?.data?.categoryValue
       )[0].engValue,
-      content: questionDetail?.content,
+      content: questionDetail?.data?.content,
     });
     setEditIcon((prev) => (prev === faPen ? faFloppyDisk : faPen));
     setQuestionInputBorder((prev) => !prev);
@@ -304,11 +305,11 @@ function QuestionDetail() {
               <WelcomeUserContainer>
                 <Link
                   to={{
-                    pathname: `/user/${loginUser.no}`,
+                    pathname: `/user/${loginUser.data.no}`,
                   }}
                 >
                   <div>반가워요!</div>
-                  <div>{`${loginUser.nickname} 님`}</div>
+                  <div>{`${loginUser.data.nickname} 님`}</div>
                 </Link>
               </WelcomeUserContainer>
             ) : (
@@ -328,13 +329,13 @@ function QuestionDetail() {
           <QuestionDetailContainer>
             <QuestionDetailInfoContainer>
               <QuestionDetailCategory>
-                {questionDetail?.categoryValue}
+                {questionDetail?.data?.categoryValue}
               </QuestionDetailCategory>
-              <QuestionDetailViews>{`${questionDetail?.views} views`}</QuestionDetailViews>
+              <QuestionDetailViews>{`${questionDetail?.data?.views} views`}</QuestionDetailViews>
             </QuestionDetailInfoContainer>
             {showCategories ? (
               <CategorySelectorContainer>
-                {categories?.map((category) => {
+                {categories?.data?.map((category) => {
                   return (
                     <CategorySelector
                       key={category.engValue}
@@ -350,19 +351,19 @@ function QuestionDetail() {
             ) : null}
             <QuestionDetailContentInput
               border={questionInputBorder}
-              defaultValue={questionDetail?.content}
+              defaultValue={questionDetail?.data?.content}
               onChange={changeQuestionDetailContentInput}
               readOnly={questionInputReadOnly}
             />
 
             <QuestionDetailInfoContainer>
-              <Link to={`/user/${questionDetail?.writerNo}`}>
+              <Link to={`/user/${questionDetail?.data?.writerNo}`}>
                 <QuestionDetailWriter>
-                  {questionDetail?.writer}
+                  {questionDetail?.data?.writer}
                 </QuestionDetailWriter>
               </Link>
               {loginUser ? (
-                loginUser.no !== questionDetail?.writerNo ? (
+                loginUser.data.no !== questionDetail?.data?.writerNo ? (
                   <QuestionDetailButtonsContainer>
                     <QuestionDetailEditBtn onClick={clickQuestionEditBtn}>
                       <FontAwesomeIcon icon={editIcon} />
@@ -395,7 +396,7 @@ function QuestionDetail() {
                 onChange={changeAnswerSaveInput}
               />
               <AnswerInfoContainer>
-                <AnswerWriter>{loginUser?.nickname}</AnswerWriter>
+                <AnswerWriter>{loginUser?.data.nickname}</AnswerWriter>
                 <AnswerButtonsContainer onClick={clickAnswerSaveBtn}>
                   <FontAwesomeIcon icon={faFloppyDisk} />
                 </AnswerButtonsContainer>
@@ -413,7 +414,7 @@ function QuestionDetail() {
                 onChange={changeAnswerEditInput}
               />
               <AnswerInfoContainer>
-                <AnswerWriter>{loginUser?.nickname}</AnswerWriter>
+                <AnswerWriter>{loginUser?.data.nickname}</AnswerWriter>
                 <AnswerButtonsContainer>
                   <FontAwesomeIcon
                     icon={faFloppyDisk}
@@ -427,7 +428,7 @@ function QuestionDetail() {
               </AnswerInfoContainer>
             </AnswerContainer>
           ) : null}
-          {answerSlice?.answers?.map((answer) => {
+          {answerSlice?.data?.answers?.map((answer) => {
             return (
               <AnswerContainer key={answer?.no}>
                 <AnswerContent>{answer?.content}</AnswerContent>
@@ -448,7 +449,7 @@ function QuestionDetail() {
                 <FontAwesomeIcon icon={faSortUp} />
               </LoadBeforeBtn>
             ) : null}
-            {answerSlice?.hasNext ? (
+            {answerSlice?.data?.hasNext ? (
               <LoadAfterBtn onClick={clickLoadAfterBtn}>
                 <FontAwesomeIcon icon={faSortDown} />
               </LoadAfterBtn>

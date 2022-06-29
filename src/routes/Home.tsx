@@ -32,28 +32,29 @@ import {
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
+import { IResponse } from "../Interfaces/CommonInterfaces";
 
 function Home() {
-  const { data: loginUser } = useQuery<ILoginUser>(
-    ["loginUser"],
-    fetchLoginUser
-  );
-  const { data: categories } = useQuery<IQuestionCategory[]>(
-    ["questionCategory"],
-    getCategories
-  );
   const [questionSaveRequest, setQuestionSaveRequest] = useState<IQuestionSave>(
     {
       content: "",
       categoryValue: "NONE",
     }
   );
+  const { data: loginUser } = useQuery<IResponse<ILoginUser>>(
+    ["loginUser"],
+    fetchLoginUser
+  );
+  const { data: categories } = useQuery<IResponse<IQuestionCategory[]>>(
+    ["questionCategory"],
+    getCategories
+  );
   const clickQuestionBtn = async () => {
     const success = await saveQuestion(questionSaveRequest);
     if (!success) {
       alert("질문 중 오류가 발생하였습니다. 다시 시도해주세요.");
     }
-    window.location.href = `/questions/${success.no}`;
+    window.location.href = `/questions/${success?.data.no}`;
   };
   const clickCategoryBtn = (event: React.MouseEvent<HTMLInputElement>) => {
     const {
@@ -91,11 +92,11 @@ function Home() {
               <WelcomeUserContainer>
                 <Link
                   to={{
-                    pathname: `/user/${loginUser.no}`,
+                    pathname: `/user/${loginUser?.data?.no}`,
                   }}
                 >
                   <div>반가워요!</div>
-                  <div>{`${loginUser.nickname} 님`}</div>
+                  <div>{`${loginUser?.data?.nickname} 님`}</div>
                 </Link>
               </WelcomeUserContainer>
             ) : (
@@ -133,7 +134,7 @@ function Home() {
             </QuestionBlank>
           </QuestionBlankContainer>
           <CategorySelectorContainer>
-            {categories?.map((category) => {
+            {categories?.data?.map((category) => {
               return (
                 <CategorySelector
                   key={category.engValue}

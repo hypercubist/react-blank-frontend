@@ -17,6 +17,11 @@ export interface IQuestion {
   views?: number;
 }
 
+export interface IQuestionSlice {
+  questions: IQuestion[];
+  hasNext: boolean;
+}
+
 export interface IQuestionUpdate {
   content?: string;
   categoryValue?: string;
