@@ -51,11 +51,9 @@ import { ISearch } from "../Interfaces/SearchInterfaces";
 import { ILoginUser } from "../Interfaces/UserInterfaces";
 
 function Questions() {
-  const [searchRequestData, setSearchRequestData] = useState<ISearch>({
-    categoryValue: "NONE",
-    word: "",
-  });
-  const [searchSlice, setSearchSlice] = useState<IResponse<IQuestionSlice>>();
+  let searchDefault = { categoryValue: "NONE", word: "" };
+  const [searchRequestData, setSearchRequestData] =
+    useState<ISearch>(searchDefault);
   const [isSearching, setIsSearching] = useState(false);
   const [paging, setPaging] = useState({ page: 0, size: 5 });
   const { data: loginUser } = useQuery<IResponse<ILoginUser>>(
@@ -70,14 +68,15 @@ function Questions() {
     ["questionIssues"],
     getIssues
   );
+  const { data: questionSlice } = useQuery<IResponse<IQuestionSlice>>(
+    ["questionSlice", searchRequestData, paging],
+    () => search(paging, searchRequestData)
+  );
   const changeSearchBlankInput = (event: React.FormEvent<HTMLInputElement>) => {
     const {
       currentTarget: { value },
     } = event;
-    setSearchRequestData((prev) => ({
-      categoryValue: prev.categoryValue,
-      word: value,
-    }));
+    searchDefault.word = value;
   };
   const clickCategoryBtn = (event: React.MouseEvent<HTMLInputElement>) => {
     const {
@@ -86,14 +85,9 @@ function Questions() {
     setSearchRequestData((prev) => ({ categoryValue: id, word: prev.word }));
   };
   const clickSearchBtn = async () => {
+    setSearchRequestData(searchDefault);
     setPaging((prev) => ({ page: 0, size: prev.size }));
-    const success = await search(paging, searchRequestData);
-    if (success) {
-      setIsSearching(true);
-      setSearchSlice(success);
-    } else {
-      alert("검색 중 오류가 발생하였습니다. 다시 시도해주세요.");
-    }
+    setIsSearching(true);
   };
   const clickLoadAfterBtn = () => {
     setPaging((prev) => ({ page: prev.page + 1, size: prev.size }));
@@ -167,7 +161,7 @@ function Questions() {
             })}
           </CategorySelectorContainer>
           <QuestionListContainer>
-            {(isSearching ? searchSlice?.data?.questions : issues?.data)?.map(
+            {(isSearching ? questionSlice?.data?.questions : issues?.data)?.map(
               (question) => (
                 <Link to={`${question.no}`} key={question.no}>
                   <QuestionList>
@@ -194,15 +188,19 @@ function Questions() {
             )}
           </QuestionListContainer>
           <LoadMoreContainer>
-            {paging.page > 0 ? (
-              <LoadBeforeBtn onClick={clickLoadBeforeBtn}>
-                <FontAwesomeIcon icon={faSortUp} />
-              </LoadBeforeBtn>
+            {isSearching ? (
+              paging.page > 0 ? (
+                <LoadBeforeBtn onClick={clickLoadBeforeBtn}>
+                  <FontAwesomeIcon icon={faSortUp} />
+                </LoadBeforeBtn>
+              ) : null
             ) : null}
-            {searchSlice?.data?.hasNext ? (
-              <LoadAfterBtn onClick={clickLoadAfterBtn}>
-                <FontAwesomeIcon icon={faSortDown} />
-              </LoadAfterBtn>
+            {isSearching ? (
+              questionSlice?.data?.hasNext ? (
+                <LoadAfterBtn onClick={clickLoadAfterBtn}>
+                  <FontAwesomeIcon icon={faSortDown} />
+                </LoadAfterBtn>
+              ) : null
             ) : null}
           </LoadMoreContainer>
         </Section>
