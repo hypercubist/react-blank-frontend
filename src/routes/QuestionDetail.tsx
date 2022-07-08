@@ -363,7 +363,7 @@ function QuestionDetail() {
                 </QuestionDetailWriter>
               </Link>
               {loginUser ? (
-                loginUser.data.no !== questionDetail?.data?.writerNo ? (
+                loginUser.data.no === questionDetail?.data?.writerNo ? (
                   <QuestionDetailButtonsContainer>
                     <QuestionDetailEditBtn onClick={clickQuestionEditBtn}>
                       <FontAwesomeIcon icon={editIcon} />
