@@ -1,1 +1,1 @@
-export const BACKEND_SERVER_URL = "http://3.37.134.71:8900";
+export const BACKEND_SERVER_URL = "http://localhost:8900";
