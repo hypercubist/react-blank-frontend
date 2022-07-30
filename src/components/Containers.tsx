@@ -207,3 +207,19 @@ export const LoadMoreContainer = styled.div`
   align-items: center;
   margin-top: 10px;
 `;
+
+export const LoginContainer = styled.div`
+  width: 300px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  border: 4px solid transparent;
+  border-radius: 20px;
+  background-image: linear-gradient(white, white),
+    linear-gradient(to right, #9796f0, #fbc7d4);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  margin-top: 100px;
+`;

@@ -6,6 +6,7 @@ import {
   LogoContainer,
   Section,
   Footer,
+  LoginContainer,
 } from "../components/Containers";
 import { BACKEND_SERVER_URL } from "../Constants";
 
@@ -27,10 +28,16 @@ function Login() {
           <div></div>
         </Header>
         <Section>
-          <h1>Login Page</h1>
-          <a href={`${BACKEND_SERVER_URL}/oauth2/authorization/google`}>
-            로그인
-          </a>
+          <LoginContainer>
+            <Link
+              to={{
+                pathname: `${BACKEND_SERVER_URL}/oauth2/authorization/google`,
+              }}
+            >
+              <img src="/images/login_btn_google.png" alt="login_btn" />
+            </Link>
+            <h2>SNS 계정으로 1초 만에 로그인하기</h2>
+          </LoginContainer>
         </Section>
         <Footer>© 2022 Team DDOBAB</Footer>
       </MainContainer>
