@@ -209,17 +209,14 @@ export const LoadMoreContainer = styled.div`
 `;
 
 export const LoginContainer = styled.div`
-  width: 300px;
+  width: 400px;
   height: 200px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  border: 4px solid transparent;
-  border-radius: 20px;
-  background-image: linear-gradient(white, white),
-    linear-gradient(to right, #9796f0, #fbc7d4);
-  background-origin: border-box;
-  background-clip: content-box, border-box;
-  margin-top: 100px;
+  margin-top: 150px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px 5px whitesmoke;
 `;
